@@ -20,23 +20,23 @@ from eth_typing import (
     BlockNumber,
 )
 
-from eth.abc import (
+from scp.abc import (
     AtomicDatabaseAPI,
     BlockHeaderAPI,
     DatabaseAPI,
     HeaderDatabaseAPI,
 )
-from eth.constants import (
+from scp.constants import (
     GENESIS_PARENT_HASH,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     CanonicalHeadNotFound,
     HeaderNotFound,
     ParentNotFound,
 )
-from eth.db.schema import SchemaV1
-from eth.rlp.headers import BlockHeader
-from eth.validation import (
+from scp.db.schema import SchemaV1
+from scp.rlp.headers import BlockHeader
+from scp.validation import (
     validate_block_number,
     validate_word,
 )

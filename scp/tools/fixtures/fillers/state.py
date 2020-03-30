@@ -7,24 +7,24 @@ from scp.typing import (
 
 from eth_utils import encode_hex
 
-from eth.tools.fixtures.helpers import (
+from scp.tools.fixtures.helpers import (
     get_test_name,
 )
-from eth.tools._utils.normalization import (
+from scp.tools._utils.normalization import (
     normalize_environment,
     normalize_networks,
     normalize_state,
     normalize_transaction_group,
 )
-from eth.tools._utils.mappings import deep_merge
-from eth.vm.forks.byzantium.state import ByzantiumState
-from eth.vm.forks.constantinople.state import ConstantinopleState
-from eth.vm.forks.frontier.state import FrontierState
-from eth.vm.forks.homestead.state import HomesteadState
-from eth.vm.forks.istanbul.state import IstanbulState
-from eth.vm.forks.petersburg.state import PetersburgState
-from eth.vm.forks.spurious_dragon.state import SpuriousDragonState
-from eth.vm.forks.tangerine_whistle.state import TangerineWhistleState
+from scp.tools._utils.mappings import deep_merge
+from scp.vm.forks.byzantium.state import ByzantiumState
+from scp.vm.forks.constantinople.state import ConstantinopleState
+from scp.vm.forks.frontier.state import FrontierState
+from scp.vm.forks.homestead.state import HomesteadState
+from scp.vm.forks.istanbul.state import IstanbulState
+from scp.vm.forks.petersburg.state import PetersburgState
+from scp.vm.forks.spurious_dragon.state import SpuriousDragonState
+from scp.vm.forks.tangerine_whistle.state import TangerineWhistleState
 
 from ._utils import (
     calc_state_root,

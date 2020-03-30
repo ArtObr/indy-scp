@@ -2,8 +2,8 @@ import itertools
 
 from eth_typing import Address
 
-from eth.abc import TransactionContextAPI
-from eth.validation import (
+from scp.abc import TransactionContextAPI
+from scp.validation import (
     validate_canonical_address,
     validate_uint256,
 )

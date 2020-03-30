@@ -7,7 +7,7 @@ from scp.typing import (
 from eth_hash.auto import keccak
 from trie import HexaryTrie
 
-from eth.db.keymap import (
+from scp.db.keymap import (
     KeyMapDB,
 )
 

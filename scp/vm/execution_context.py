@@ -8,8 +8,8 @@ from eth_typing import (
     Hash32,
 )
 
-from eth.abc import ExecutionContextAPI
-from eth._utils.generator import CachedIterable
+from scp.abc import ExecutionContextAPI
+from scp._utils.generator import CachedIterable
 
 
 class ExecutionContext(ExecutionContextAPI):

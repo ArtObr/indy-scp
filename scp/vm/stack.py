@@ -5,11 +5,11 @@ from eth_utils import (
     int_to_big_endian,
     ValidationError,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     InsufficientStack,
     FullStack,
 )
-from eth.validation import (
+from scp.validation import (
     validate_stack_bytes,
     validate_stack_int,
 )
@@ -20,7 +20,7 @@ from scp.typing import (
     Union
 )
 
-from eth.abc import StackAPI
+from scp.abc import StackAPI
 
 
 def _busted_type(item_type: type, value: Union[int, bytes]) -> ValidationError:

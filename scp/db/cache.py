@@ -1,7 +1,7 @@
 from lru import LRU
 
-from eth.abc import DatabaseAPI
-from eth.db.backends.base import BaseDB
+from scp.abc import DatabaseAPI
+from scp.db.backends.base import BaseDB
 
 
 class CacheDB(BaseDB):

@@ -7,7 +7,7 @@ from scp.typing import (
 
 from eth_utils import import_string
 
-from eth.abc import AtomicDatabaseAPI
+from scp.abc import AtomicDatabaseAPI
 
 
 DEFAULT_DB_BACKEND = 'eth.db.atomic.AtomicDB'

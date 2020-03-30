@@ -12,8 +12,8 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth.abc import DatabaseAPI
-from eth.typing import JournalDBCheckpoint
+from scp.abc import DatabaseAPI
+from scp.typing import JournalDBCheckpoint
 
 from .backends.base import BaseDB
 from .diff import DBDiff, DBDiffTracker

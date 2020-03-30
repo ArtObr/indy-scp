@@ -1,8 +1,8 @@
-from eth.abc import (
+from scp.abc import (
     BlockAPI,
     VirtualMachineAPI,
 )
-from eth.consensus import (
+from scp.consensus import (
     pow,
 )
 

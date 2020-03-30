@@ -20,22 +20,22 @@ from eth_typing import (
 
 from eth_hash.auto import keccak
 
-from eth.abc import (
+from scp.abc import (
     BlockHeaderAPI,
     ChainDatabaseAPI,
     ReceiptAPI,
     SignedTransactionAPI,
 )
-from eth.constants import (
+from scp.constants import (
     EMPTY_UNCLE_HASH,
 )
-from eth.rlp.blocks import (
+from scp.rlp.blocks import (
     BaseBlock,
 )
-from eth.rlp.headers import (
+from scp.rlp.headers import (
     BlockHeader,
 )
-from eth.rlp.receipts import (
+from scp.rlp.receipts import (
     Receipt,
 )
 

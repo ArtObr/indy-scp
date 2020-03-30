@@ -8,11 +8,11 @@ from scp.typing import (
 
 from eth_utils import ValidationError
 
-from eth.abc import (
+from scp.abc import (
     AtomicWriteBatchAPI,
     DatabaseAPI,
 )
-from eth.db.diff import (
+from scp.db.diff import (
     DBDiffTracker,
     DiffMissingError,
 )
@@ -21,7 +21,7 @@ from .base import (
     BaseDB,
 )
 
-from eth._warnings import catch_and_ignore_import_warning
+from scp._warnings import catch_and_ignore_import_warning
 
 if TYPE_CHECKING:
     with catch_and_ignore_import_warning():

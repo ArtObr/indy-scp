@@ -3,9 +3,9 @@ from scp.typing import NamedTuple
 from eth_utils import (
     encode_hex,
 )
-from eth import constants
+from scp import constants
 
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def sstore(computation: BaseComputation) -> None:

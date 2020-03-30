@@ -1,11 +1,11 @@
-from eth.exceptions import (
+from scp.exceptions import (
     InvalidJumpDestination,
     InvalidInstruction,
     Halt,
 )
 
-from eth.vm.computation import BaseComputation
-from eth.vm.opcode_values import (
+from scp.vm.computation import BaseComputation
+from scp.vm.opcode_values import (
     JUMPDEST,
 )
 

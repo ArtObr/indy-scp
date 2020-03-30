@@ -10,21 +10,21 @@ from eth_utils import (
     decode_hex,
 )
 
-from eth.constants import (
+from scp.constants import (
     DIFFICULTY_ADJUSTMENT_DENOMINATOR,
     DIFFICULTY_MINIMUM,
     BOMB_EXPONENTIAL_PERIOD,
     BOMB_EXPONENTIAL_FREE_PERIODS,
 )
-from eth.rlp.headers import BlockHeader
-from eth._utils.db import (
+from scp.rlp.headers import BlockHeader
+from scp._utils.db import (
     get_parent_header,
 )
-from eth.validation import (
+from scp.validation import (
     validate_gt,
     validate_header_params_for_configuration,
 )
-from eth.vm.forks.frontier.headers import (
+from scp.vm.forks.frontier.headers import (
     create_frontier_header_from_parent,
 )
 
@@ -33,7 +33,7 @@ from .constants import (
 )
 
 if TYPE_CHECKING:
-    from eth.vm.forks.homestead import HomesteadVM      # noqa: F401
+    from scp.vm.forks.homestead import HomesteadVM      # noqa: F401
 
 
 def compute_homestead_difficulty(parent_header: BlockHeader, timestamp: int) -> int:

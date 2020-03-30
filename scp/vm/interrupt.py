@@ -9,7 +9,7 @@ from trie.exceptions import (
     MissingTrieNode,
 )
 
-from eth.exceptions import (
+from scp.exceptions import (
     PyEVMError,
 )
 

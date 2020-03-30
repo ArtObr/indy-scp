@@ -2,7 +2,7 @@ import pytest
 
 from eth_utils import ValidationError
 
-from eth.abc import AtomicDatabaseAPI
+from scp.abc import AtomicDatabaseAPI
 
 
 class AtomicDatabaseBatchAPITestSuite:

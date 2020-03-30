@@ -21,7 +21,7 @@ from trie.exceptions import (
     MissingTrieNode,
 )
 
-from eth.abc import (
+from scp.abc import (
     BlockAPI,
     BlockHeaderAPI,
     ChainDatabaseAPI,
@@ -30,27 +30,27 @@ from eth.abc import (
     ReceiptAPI,
     SignedTransactionAPI,
 )
-from eth.constants import (
+from scp.constants import (
     EMPTY_UNCLE_HASH,
     GENESIS_PARENT_HASH,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     HeaderNotFound,
     ReceiptNotFound,
     TransactionNotFound,
 )
-from eth.db.header import HeaderDB
-from eth.db.schema import SchemaV1
-from eth.rlp.headers import (
+from scp.db.header import HeaderDB
+from scp.db.schema import SchemaV1
+from scp.rlp.headers import (
     BlockHeader,
 )
-from eth.rlp.receipts import (
+from scp.rlp.receipts import (
     Receipt
 )
-from eth.validation import (
+from scp.validation import (
     validate_word,
 )
-from eth._warnings import catch_and_ignore_import_warning
+from scp._warnings import catch_and_ignore_import_warning
 with catch_and_ignore_import_warning():
     import rlp
     from trie import (

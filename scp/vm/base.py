@@ -25,7 +25,7 @@ from eth_utils import (
 )
 import rlp
 
-from eth.abc import (
+from scp.abc import (
     AtomicDatabaseAPI,
     BlockAPI,
     BlockHeaderAPI,
@@ -41,45 +41,45 @@ from eth.abc import (
     UnsignedTransactionAPI,
     VirtualMachineAPI,
 )
-from eth.consensus.pow import (
+from scp.consensus.pow import (
     PowConsensus,
 )
-from eth.constants import (
+from scp.constants import (
     GENESIS_PARENT_HASH,
     MAX_PREV_HEADER_DEPTH,
     MAX_UNCLES,
 )
-from eth.db.trie import make_trie_root_and_nodes
-from eth.exceptions import (
+from scp.db.trie import make_trie_root_and_nodes
+from scp.exceptions import (
     HeaderNotFound,
 )
-from eth.rlp.headers import (
+from scp.rlp.headers import (
     BlockHeader,
 )
-from eth.rlp.sedes import (
+from scp.rlp.sedes import (
     uint32,
 )
-from eth._utils.datatypes import (
+from scp._utils.datatypes import (
     Configurable,
 )
-from eth._utils.db import (
+from scp._utils.db import (
     get_parent_header,
     get_block_header_by_hash,
 )
-from eth._utils.headers import (
+from scp._utils.headers import (
     generate_header_from_parent_header,
 )
-from eth.validation import (
+from scp.validation import (
     validate_length_lte,
     validate_gas_limit,
 )
-from eth.vm.execution_context import (
+from scp.vm.execution_context import (
     ExecutionContext,
 )
-from eth.vm.interrupt import (
+from scp.vm.interrupt import (
     EVMMissingData,
 )
-from eth.vm.message import (
+from scp.vm.message import (
     Message,
 )
 

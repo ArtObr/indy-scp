@@ -1,7 +1,7 @@
 from scp.typing import Any, Union
 
-from eth.abc import SignedTransactionAPI, UnsignedTransactionAPI
-from eth._utils.spoof import SpoofAttributes
+from scp.abc import SignedTransactionAPI, UnsignedTransactionAPI
+from scp._utils.spoof import SpoofAttributes
 
 
 class SpoofTransaction(SpoofAttributes):

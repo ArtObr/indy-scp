@@ -7,18 +7,18 @@ from eth_utils import (
     int_to_big_endian,
 )
 
-from eth import constants
+from scp import constants
 
-from eth._utils.numeric import (
+from scp._utils.numeric import (
     get_highest_bit_index,
 )
-from eth._utils.padding import (
+from scp._utils.padding import (
     pad32r,
     zpad_right,
     zpad_left,
 )
 
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 

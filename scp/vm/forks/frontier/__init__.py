@@ -4,7 +4,7 @@ from eth_bloom import (
     BloomFilter,
 )
 
-from eth.abc import (
+from scp.abc import (
     BlockAPI,
     BlockHeaderAPI,
     ReceiptAPI,
@@ -12,15 +12,15 @@ from eth.abc import (
     SignedTransactionAPI,
     ComputationAPI,
 )
-from eth.constants import (
+from scp.constants import (
     BLOCK_REWARD,
     UNCLE_DEPTH_PENALTY_FACTOR,
     ZERO_HASH32,
 )
-from eth.rlp.logs import Log
-from eth.rlp.receipts import Receipt
+from scp.rlp.logs import Log
+from scp.rlp.receipts import Receipt
 
-from eth.vm.base import VM
+from scp.vm.base import VM
 
 from .blocks import FrontierBlock
 from .state import FrontierState

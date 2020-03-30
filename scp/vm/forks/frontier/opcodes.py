@@ -1,11 +1,11 @@
 from scp.typing import Dict
 
-from eth import constants
+from scp import constants
 
-from eth.abc import OpcodeAPI
-from eth.vm import mnemonics
-from eth.vm import opcode_values
-from eth.vm.logic import (
+from scp.abc import OpcodeAPI
+from scp.vm import mnemonics
+from scp.vm import opcode_values
+from scp.vm.logic import (
     arithmetic,
     block,
     call,
@@ -21,7 +21,7 @@ from eth.vm.logic import (
     swap,
     system,
 )
-from eth.vm.opcode import (
+from scp.vm.opcode import (
     as_opcode,
 )
 

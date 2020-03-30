@@ -11,9 +11,9 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth.abc import DatabaseAPI
-from eth.db.backends.base import BaseDB
-from eth.db.diff import DBDiff, DBDiffTracker
+from scp.abc import DatabaseAPI
+from scp.db.backends.base import BaseDB
+from scp.db.diff import DBDiff, DBDiffTracker
 
 
 class DeletedEntry:

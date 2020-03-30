@@ -3,7 +3,7 @@ from eth_typing import (
     Hash32,
 )
 
-from eth.abc import SchemaAPI
+from scp.abc import SchemaAPI
 
 
 class SchemaV1(SchemaAPI):

@@ -13,20 +13,20 @@ from eth_utils.toolz import (
     curry,
 )
 
-from eth import constants
+from scp import constants
 
-from eth.exceptions import (
+from scp.exceptions import (
     VMError,
 )
-from eth._utils.bn128 import (
+from scp._utils.bn128 import (
     validate_point,
 )
-from eth._utils.padding import (
+from scp._utils.padding import (
     pad32,
     pad32r,
 )
 
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 

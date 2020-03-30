@@ -3,11 +3,11 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth._utils.blake2.coders import extract_blake2b_parameters
-from eth.exceptions import (
+from scp._utils.blake2.coders import extract_blake2b_parameters
+from scp.exceptions import (
     VMError,
 )
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 

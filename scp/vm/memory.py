@@ -1,17 +1,17 @@
 import itertools
 import logging
 
-from eth.validation import (
+from scp.validation import (
     validate_is_bytes,
     validate_length,
     validate_lte,
     validate_uint256,
 )
 
-from eth._utils.numeric import (
+from scp._utils.numeric import (
     ceil32,
 )
-from eth.abc import MemoryAPI
+from scp.abc import MemoryAPI
 
 
 class Memory(MemoryAPI):

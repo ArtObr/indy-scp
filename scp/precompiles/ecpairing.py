@@ -12,25 +12,25 @@ from py_ecc import (
     optimized_bn128 as bn128,
 )
 
-from eth import constants
+from scp import constants
 
-from eth.exceptions import (
+from scp.exceptions import (
     VMError,
 )
 
-from eth.typing import (
+from scp.typing import (
     BytesOrView,
 )
 
-from eth._utils.bn128 import (
+from scp._utils.bn128 import (
     validate_point,
     FQP_point_to_FQ2_point,
 )
-from eth._utils.padding import (
+from scp._utils.padding import (
     pad32,
 )
 
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 

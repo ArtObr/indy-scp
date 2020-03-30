@@ -2,7 +2,7 @@ from scp.typing import (
     Iterator,
 )
 
-from eth.abc import (
+from scp.abc import (
     AtomicDatabaseAPI,
     DatabaseAPI,
 )

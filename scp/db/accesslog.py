@@ -6,15 +6,15 @@ from scp.typing import (
     Set,
 )
 
-from eth.abc import (
+from scp.abc import (
     AtomicWriteBatchAPI,
     AtomicDatabaseAPI,
     DatabaseAPI,
 )
-from eth.db.backends.base import (
+from scp.db.backends.base import (
     BaseDB,
 )
-from eth.db.atomic import (
+from scp.db.atomic import (
     BaseAtomicDB,
 )
 

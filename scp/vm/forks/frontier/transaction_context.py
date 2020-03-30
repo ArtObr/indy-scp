@@ -1,4 +1,4 @@
-from eth.vm.transaction_context import BaseTransactionContext
+from scp.vm.transaction_context import BaseTransactionContext
 
 
 class FrontierTransactionContext(BaseTransactionContext):

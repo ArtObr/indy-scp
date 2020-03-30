@@ -3,32 +3,32 @@ from scp.typing import (
     TYPE_CHECKING,
 )
 
-from eth.validation import (
+from scp.validation import (
     validate_gt,
     validate_header_params_for_configuration,
 )
 
-from eth.constants import (
+from scp.constants import (
     GENESIS_GAS_LIMIT,
     DIFFICULTY_ADJUSTMENT_DENOMINATOR,
     DIFFICULTY_MINIMUM,
     BOMB_EXPONENTIAL_PERIOD,
     BOMB_EXPONENTIAL_FREE_PERIODS,
 )
-from eth._utils.db import (
+from scp._utils.db import (
     get_parent_header,
 )
-from eth._utils.headers import (
+from scp._utils.headers import (
     compute_gas_limit,
 )
-from eth.rlp.headers import BlockHeader
+from scp.rlp.headers import BlockHeader
 
 from .constants import (
     FRONTIER_DIFFICULTY_ADJUSTMENT_CUTOFF
 )
 
 if TYPE_CHECKING:
-    from eth.vm.forks.frontier import FrontierVM    # noqa: F401
+    from scp.vm.forks.frontier import FrontierVM    # noqa: F401
 
 
 def compute_frontier_difficulty(parent_header: BlockHeader, timestamp: int) -> int:

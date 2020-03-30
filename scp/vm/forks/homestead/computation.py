@@ -1,15 +1,15 @@
 from eth_hash.auto import keccak
 
-from eth import constants
-from eth.exceptions import (
+from scp import constants
+from scp.exceptions import (
     OutOfGas,
 )
 from eth_utils import (
     encode_hex,
 )
 
-from eth.abc import ComputationAPI
-from eth.vm.forks.frontier.computation import (
+from scp.abc import ComputationAPI
+from scp.vm.forks.frontier.computation import (
     FrontierComputation,
 )
 

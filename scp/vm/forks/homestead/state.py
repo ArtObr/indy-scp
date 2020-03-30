@@ -1,10 +1,10 @@
 from scp.typing import Type
 
-from eth.abc import (
+from scp.abc import (
     ComputationAPI,
     SignedTransactionAPI,
 )
-from eth.vm.forks.frontier.state import (
+from scp.vm.forks.frontier.state import (
     FrontierState,
     FrontierTransactionExecutor,
 )

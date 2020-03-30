@@ -16,8 +16,8 @@ from eth_utils import (
     to_tuple,
 )
 
-from eth.abc import DatabaseAPI
-from eth.vm.interrupt import EVMMissingData
+from scp.abc import DatabaseAPI
+from scp.vm.interrupt import EVMMissingData
 
 if TYPE_CHECKING:
     ABC_Mutable_Mapping = MutableMapping[bytes, Union[bytes, 'MissingReason']]

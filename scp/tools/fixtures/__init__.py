@@ -14,7 +14,7 @@ from .helpers import (  # noqa: F401
     should_run_slow_tests,
     verify_state,
 )
-from eth.tools._utils.normalization import (  # noqa: F401
+from scp.tools._utils.normalization import (  # noqa: F401
     normalize_block,
     normalize_blockchain_fixtures,
     normalize_statetest_fixture,

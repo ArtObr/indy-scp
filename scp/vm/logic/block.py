@@ -1,4 +1,4 @@
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def blockhash(computation: BaseComputation) -> None:

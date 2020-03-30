@@ -34,11 +34,11 @@ from eth_utils import ExtendedDebugLogger
 
 from eth_keys.datatypes import PrivateKey
 
-from eth.constants import (
+from scp.constants import (
     BLANK_ROOT_HASH,
 )
-from eth.exceptions import VMError
-from eth.typing import (
+from scp.exceptions import VMError
+from scp.typing import (
     BytesOrView,
     JournalDBCheckpoint,
     AccountState,

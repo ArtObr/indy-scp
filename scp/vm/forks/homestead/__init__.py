@@ -2,11 +2,11 @@ from scp.typing import Optional, Type
 
 from eth_typing import BlockNumber
 
-from eth.abc import (
+from scp.abc import (
     BlockAPI,
     StateAPI,
 )
-from eth.vm.forks.frontier import FrontierVM
+from scp.vm.forks.frontier import FrontierVM
 
 from .blocks import HomesteadBlock
 from .headers import (

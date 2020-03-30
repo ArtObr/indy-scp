@@ -7,24 +7,24 @@ from scp.typing import (
     Tuple,
 )
 
-from eth import constants
+from scp import constants
 
 from eth_typing import (
     Address,
 )
 
-from eth.abc import (
+from scp.abc import (
     ComputationAPI,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     OutOfGas,
     WriteProtection,
 )
-from eth.vm.opcode import (
+from scp.vm.opcode import (
     Opcode,
 )
 
-from eth._utils.address import (
+from scp._utils.address import (
     force_bytes_to_address,
 )
 

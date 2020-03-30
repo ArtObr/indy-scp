@@ -2,20 +2,20 @@ from eth_typing import (
     Address,
 )
 
-from eth import constants
+from scp import constants
 
-from eth.exceptions import (
+from scp.exceptions import (
     OutOfBoundsRead,
 )
 
-from eth._utils.address import (
+from scp._utils.address import (
     force_bytes_to_address,
 )
-from eth._utils.numeric import (
+from scp._utils.numeric import (
     ceil32,
 )
 
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def balance(computation: BaseComputation) -> None:

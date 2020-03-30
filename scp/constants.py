@@ -4,7 +4,7 @@ from eth_typing import (
     Hash32
 )
 
-from eth._warnings import catch_and_ignore_import_warning
+from scp._warnings import catch_and_ignore_import_warning
 with catch_and_ignore_import_warning():
     from eth_utils import denoms
 

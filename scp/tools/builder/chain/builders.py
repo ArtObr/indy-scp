@@ -29,40 +29,40 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth import constants
-from eth.abc import (
+from scp import constants
+from scp.abc import (
     AtomicDatabaseAPI,
     BlockAPI,
     ChainAPI,
     MiningChainAPI,
     VirtualMachineAPI,
 )
-from eth.consensus.applier import ConsensusApplier
-from eth.consensus.noproof import NoProofConsensus
-from eth.db.atomic import AtomicDB
-from eth.db.backends.memory import (
+from scp.consensus.applier import ConsensusApplier
+from scp.consensus.noproof import NoProofConsensus
+from scp.db.atomic import AtomicDB
+from scp.db.backends.memory import (
     MemoryDB,
 )
-from eth.rlp.headers import (
+from scp.rlp.headers import (
     HeaderParams,
 )
-from eth.tools.mining import POWMiningMixin
-from eth.tools._utils.mappings import (
+from scp.tools.mining import POWMiningMixin
+from scp.tools._utils.mappings import (
     deep_merge,
 )
-from eth.tools._utils.normalization import (
+from scp.tools._utils.normalization import (
     normalize_state,
 )
-from eth.typing import (
+from scp.typing import (
     AccountState,
     GeneralState,
     VMFork,
     VMConfiguration,
 )
-from eth.validation import (
+from scp.validation import (
     validate_vm_configuration,
 )
-from eth.vm.forks import (
+from scp.vm.forks import (
     FrontierVM,
     HomesteadVM,
     TangerineWhistleVM,
@@ -117,8 +117,8 @@ def fork_at(vm_class: Type[VirtualMachineAPI],
 
     .. code-block:: python
 
-        from eth.chains.base import MiningChain
-        from eth.tools.builder.chain import build, fork_at
+        from scp.chains.base import MiningChain
+        from scp.tools.builder.chain import build, fork_at
 
         FrontierOnlyChain = build(MiningChain, fork_at(FrontierVM, 0))
 

@@ -8,11 +8,11 @@ from trie import (
 
 from eth_typing import Hash32
 
-from eth.abc import (
+from scp.abc import (
     ReceiptAPI,
     SignedTransactionAPI,
 )
-from eth.constants import (
+from scp.constants import (
     BLANK_ROOT_HASH,
 )
 

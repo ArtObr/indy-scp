@@ -22,36 +22,36 @@ from trie import (
     exceptions as trie_exceptions,
 )
 
-from eth._utils.padding import (
+from scp._utils.padding import (
     pad32,
 )
-from eth.abc import (
+from scp.abc import (
     AccountStorageDatabaseAPI,
     AtomicDatabaseAPI,
     DatabaseAPI,
 )
-from eth.constants import (
+from scp.constants import (
     BLANK_ROOT_HASH,
 )
-from eth.db.backends.base import (
+from scp.db.backends.base import (
     BaseDB,
 )
-from eth.db.backends.memory import (
+from scp.db.backends.memory import (
     MemoryDB,
 )
-from eth.db.batch import (
+from scp.db.batch import (
     BatchDB,
 )
-from eth.db.cache import (
+from scp.db.cache import (
     CacheDB,
 )
-from eth.db.journal import (
+from scp.db.journal import (
     JournalDB,
 )
-from eth.vm.interrupt import (
+from scp.vm.interrupt import (
     MissingStorageTrieNode,
 )
-from eth.typing import (
+from scp.typing import (
     JournalDBCheckpoint,
 )
 

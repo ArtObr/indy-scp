@@ -2,14 +2,14 @@ import logging
 
 from eth_typing import Address
 
-from eth.abc import MessageAPI
-from eth.constants import (
+from scp.abc import MessageAPI
+from scp.constants import (
     CREATE_CONTRACT_ADDRESS,
 )
-from eth.typing import (
+from scp.typing import (
     BytesOrView,
 )
-from eth.validation import (
+from scp.validation import (
     validate_canonical_address,
     validate_is_bytes,
     validate_is_bytes_or_view,

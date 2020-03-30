@@ -5,7 +5,7 @@ from eth_utils import (
     encode_hex,
 )
 
-from eth.abc import (
+from scp.abc import (
     AccountDatabaseAPI,
     ComputationAPI,
     SignedTransactionAPI,
@@ -13,22 +13,22 @@ from eth.abc import (
     TransactionContextAPI,
     TransactionExecutorAPI,
 )
-from eth.constants import CREATE_CONTRACT_ADDRESS
-from eth.db.account import (
+from scp.constants import CREATE_CONTRACT_ADDRESS
+from scp.db.account import (
     AccountDB,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     ContractCreationCollision,
 )
 
-from eth._utils.address import (
+from scp._utils.address import (
     generate_contract_address,
 )
 
-from eth.vm.message import (
+from scp.vm.message import (
     Message,
 )
-from eth.vm.state import (
+from scp.vm.state import (
     BaseState,
     BaseTransactionExecutor,
 )

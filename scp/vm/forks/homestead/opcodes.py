@@ -3,15 +3,15 @@ from scp.typing import Dict
 
 from eth_utils.toolz import merge
 
-from eth import constants
-from eth.abc import OpcodeAPI
-from eth.vm import mnemonics
-from eth.vm import opcode_values
-from eth.vm.logic import (
+from scp import constants
+from scp.abc import OpcodeAPI
+from scp.vm import mnemonics
+from scp.vm import opcode_values
+from scp.vm.logic import (
     call,
 )
 
-from eth.vm.forks.frontier.opcodes import FRONTIER_OPCODES
+from scp.vm.forks.frontier.opcodes import FRONTIER_OPCODES
 
 
 NEW_OPCODES = {

@@ -1,11 +1,11 @@
-from eth import constants
+from scp import constants
 
-from eth._utils.numeric import (
+from scp._utils.numeric import (
     signed_to_unsigned,
     unsigned_to_signed,
 )
 
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def lt(computation: BaseComputation) -> None:

@@ -6,8 +6,8 @@ from scp.typing import (
     Any,
 )
 
-from eth.abc import DatabaseAPI
-from eth.db.backends.base import BaseDB
+from scp.abc import DatabaseAPI
+from scp.db.backends.base import BaseDB
 
 
 class KeyMapDB(BaseDB):

@@ -4,27 +4,27 @@ from eth_typing import (
 from eth_utils import (
     encode_hex,
 )
-from eth import constants
-from eth.exceptions import (
+from scp import constants
+from scp.exceptions import (
     Halt,
     Revert,
     WriteProtection,
 )
 
-from eth._utils.address import (
+from scp._utils.address import (
     force_bytes_to_address,
     generate_contract_address,
     generate_safe_contract_address,
 )
-from eth._utils.numeric import (
+from scp._utils.numeric import (
     ceil32,
 )
-from eth.abc import (
+from scp.abc import (
     ComputationAPI,
     MessageAPI,
 )
-from eth.vm import mnemonics
-from eth.vm.opcode import Opcode
+from scp.vm import mnemonics
+from scp.vm.opcode import Opcode
 
 from .call import max_child_gas_eip150
 

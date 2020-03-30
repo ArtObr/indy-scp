@@ -12,8 +12,8 @@ from eth_utils import (
     get_extended_debug_logger,
 )
 
-from eth._utils.datatypes import Configurable
-from eth.abc import (
+from scp._utils.datatypes import Configurable
+from scp.abc import (
     ComputationAPI,
     OpcodeAPI,
 )

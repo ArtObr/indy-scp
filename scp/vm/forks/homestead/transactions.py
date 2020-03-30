@@ -6,19 +6,19 @@ from eth_keys.datatypes import PrivateKey
 
 from eth_typing import Address
 
-from eth.constants import GAS_TXCREATE
+from scp.constants import GAS_TXCREATE
 
-from eth.validation import (
+from scp.validation import (
     validate_lt_secpk1n2,
 )
 
-from eth.vm.forks.frontier.transactions import (
+from scp.vm.forks.frontier.transactions import (
     FrontierTransaction,
     FrontierUnsignedTransaction,
     FRONTIER_TX_GAS_SCHEDULE,
 )
 
-from eth._utils.transactions import (
+from scp._utils.transactions import (
     create_transaction_signature,
     calculate_intrinsic_gas,
 )

@@ -8,18 +8,18 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth.abc import (
+from scp.abc import (
     AtomicWriteBatchAPI,
     DatabaseAPI,
 )
 
-from eth.db.diff import (
+from scp.db.diff import (
     DBDiff,
     DBDiffTracker,
     DiffMissingError,
 )
-from eth.db.backends.base import BaseAtomicDB, BaseDB
-from eth.db.backends.memory import MemoryDB
+from scp.db.backends.base import BaseAtomicDB, BaseDB
+from scp.db.backends.memory import MemoryDB
 
 
 class AtomicDB(BaseAtomicDB):

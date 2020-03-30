@@ -1,6 +1,6 @@
 import functools
 
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def dup_XX(computation: BaseComputation, position: int) -> None:

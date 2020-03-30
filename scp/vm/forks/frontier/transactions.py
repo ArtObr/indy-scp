@@ -8,13 +8,13 @@ from eth_typing import (
     Address,
 )
 
-from eth.constants import (
+from scp.constants import (
     CREATE_CONTRACT_ADDRESS,
     GAS_TX,
     GAS_TXDATAZERO,
     GAS_TXDATANONZERO,
 )
-from eth.validation import (
+from scp.validation import (
     validate_uint256,
     validate_is_integer,
     validate_is_bytes,
@@ -24,12 +24,12 @@ from eth.validation import (
     validate_canonical_address,
 )
 
-from eth.rlp.transactions import (
+from scp.rlp.transactions import (
     BaseTransaction,
     BaseUnsignedTransaction,
 )
 
-from eth._utils.transactions import (
+from scp._utils.transactions import (
     create_transaction_signature,
     extract_transaction_sender,
     validate_transaction_signature,

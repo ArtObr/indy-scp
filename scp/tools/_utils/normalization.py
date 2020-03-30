@@ -50,16 +50,16 @@ from eth_utils import (
 )
 import eth_utils.curried
 
-from eth.constants import (
+from scp.constants import (
     CREATE_CONTRACT_ADDRESS,
 )
 
-from eth.tools._utils.mappings import (
+from scp.tools._utils.mappings import (
     deep_merge,
     is_cleanly_mergable,
 )
 
-from eth.typing import (
+from scp.typing import (
     AccountState,
     GeneralState,
     IntConvertible,

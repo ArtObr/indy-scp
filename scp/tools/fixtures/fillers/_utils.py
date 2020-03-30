@@ -16,19 +16,19 @@ from eth_utils import (
     int_to_big_endian,
 )
 
-from eth._utils.db import (
+from scp._utils.db import (
     apply_state_dict,
 )
-from eth._utils.padding import (
+from scp._utils.padding import (
     pad32,
 )
-from eth.constants import BLANK_ROOT_HASH
-from eth.db.atomic import AtomicDB
-from eth.typing import (
+from scp.constants import BLANK_ROOT_HASH
+from scp.db.atomic import AtomicDB
+from scp.typing import (
     AccountState,
     TransactionDict,
 )
-from eth.vm.state import (
+from scp.vm.state import (
     BaseState,
 )
 

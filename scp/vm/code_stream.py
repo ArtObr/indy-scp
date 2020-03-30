@@ -5,11 +5,11 @@ from scp.typing import (
     Set
 )
 
-from eth.abc import CodeStreamAPI
-from eth.validation import (
+from scp.abc import CodeStreamAPI
+from scp.validation import (
     validate_is_bytes,
 )
-from eth.vm.opcode_values import (
+from scp.vm.opcode_values import (
     PUSH1,
     PUSH32,
     STOP,

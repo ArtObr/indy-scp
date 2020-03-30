@@ -1,9 +1,9 @@
-from eth import constants
-from eth._utils.numeric import (
+from scp import constants
+from scp._utils.numeric import (
     ceil32,
 )
 
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 

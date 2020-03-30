@@ -17,7 +17,7 @@ from eth_utils import (
 )
 from eth_utils.toolz import nth
 
-from eth.abc import (
+from scp.abc import (
     AccountDatabaseAPI,
     AtomicDatabaseAPI,
     ComputationAPI,
@@ -28,10 +28,10 @@ from eth.abc import (
     TransactionContextAPI,
     TransactionExecutorAPI,
 )
-from eth.constants import (
+from scp.constants import (
     MAX_PREV_HEADER_DEPTH,
 )
-from eth._utils.datatypes import (
+from scp._utils.datatypes import (
     Configurable,
 )
 

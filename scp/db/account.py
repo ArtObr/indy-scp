@@ -25,42 +25,42 @@ from trie import (
     exceptions as trie_exceptions,
 )
 
-from eth.abc import (
+from scp.abc import (
     AccountDatabaseAPI,
     AccountStorageDatabaseAPI,
     AtomicDatabaseAPI,
     DatabaseAPI,
 )
-from eth.constants import (
+from scp.constants import (
     BLANK_ROOT_HASH,
     EMPTY_SHA3,
 )
-from eth.db.batch import (
+from scp.db.batch import (
     BatchDB,
 )
-from eth.db.cache import (
+from scp.db.cache import (
     CacheDB,
 )
-from eth.db.diff import (
+from scp.db.diff import (
     DBDiff,
 )
-from eth.db.journal import (
+from scp.db.journal import (
     JournalDB,
 )
-from eth.db.storage import (
+from scp.db.storage import (
     AccountStorageDB,
 )
-from eth.typing import (
+from scp.typing import (
     JournalDBCheckpoint,
 )
-from eth.vm.interrupt import (
+from scp.vm.interrupt import (
     MissingAccountTrieNode,
     MissingBytecode,
 )
-from eth.rlp.accounts import (
+from scp.rlp.accounts import (
     Account,
 )
-from eth.validation import (
+from scp.validation import (
     validate_is_bytes,
     validate_uint256,
     validate_canonical_address,

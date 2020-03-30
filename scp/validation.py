@@ -24,8 +24,8 @@ from eth_utils.toolz import functoolz
 
 from eth_utils.toolz import itertoolz
 
-from eth.abc import VirtualMachineAPI
-from eth.constants import (
+from scp.abc import VirtualMachineAPI
+from scp.constants import (
     GAS_LIMIT_ADJUSTMENT_FACTOR,
     GAS_LIMIT_MAXIMUM,
     GAS_LIMIT_MINIMUM,
@@ -34,7 +34,7 @@ from eth.constants import (
     UINT_64_MAX,
 )
 
-from eth.typing import (
+from scp.typing import (
     BytesOrView,
 )
 

@@ -2,7 +2,7 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth.abc import (
+from scp.abc import (
     BlockHeaderAPI,
     SignedTransactionAPI,
     StateAPI,

@@ -22,24 +22,24 @@ from eth_utils import (
     to_canonical_address,
 )
 
-from eth.tools.fixtures.helpers import (
+from scp.tools.fixtures.helpers import (
     get_test_name,
 )
-from eth.tools._utils.normalization import (
+from scp.tools._utils.normalization import (
     normalize_environment,
     normalize_execution,
     normalize_state,
     normalize_transaction,
     normalize_networks,
 )
-from eth.tools._utils.mappings import (
+from scp.tools._utils.mappings import (
     deep_merge,
 )
-from eth.tools._utils.vyper import (
+from scp.tools._utils.vyper import (
     compile_vyper_lll,
 )
 
-from eth.typing import (
+from scp.typing import (
     GeneralState,
     TransactionDict,
 )

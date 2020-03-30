@@ -1,10 +1,10 @@
 from eth_hash.auto import keccak
 
-from eth import constants
-from eth._utils.numeric import (
+from scp import constants
+from scp._utils.numeric import (
     ceil32,
 )
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def sha3(computation: BaseComputation) -> None:

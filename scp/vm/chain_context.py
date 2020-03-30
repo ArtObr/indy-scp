@@ -1,7 +1,7 @@
 from scp.typing import Optional
 
-from eth.abc import ChainContextAPI
-from eth.validation import (
+from scp.abc import ChainContextAPI
+from scp.validation import (
     validate_uint256,
 )
 

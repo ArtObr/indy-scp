@@ -17,27 +17,27 @@ from eth_utils import (
     to_normalized_address,
 )
 
-from eth import MainnetChain
-from eth.abc import (
+from scp import MainnetChain
+from scp.abc import (
     BlockAPI,
     ChainAPI,
     StateAPI,
     VirtualMachineAPI,
 )
-from eth.db.atomic import AtomicDB
-from eth.chains.mainnet import (
+from scp.db.atomic import AtomicDB
+from scp.chains.mainnet import (
     MainnetDAOValidatorVM,
 )
-from eth.tools.builder.chain import (
+from scp.tools.builder.chain import (
     disable_pow_check,
 )
-from eth.typing import (
+from scp.typing import (
     AccountState,
 )
-from eth._utils.state import (
+from scp._utils.state import (
     diff_state,
 )
-from eth.vm.forks import (
+from scp.vm.forks import (
     PetersburgVM,
     ConstantinopleVM,
     ByzantiumVM,

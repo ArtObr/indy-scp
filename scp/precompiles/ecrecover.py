@@ -8,19 +8,19 @@ from eth_utils import (
     ValidationError,
 )
 
-from eth import constants
+from scp import constants
 
-from eth._utils.padding import (
+from scp._utils.padding import (
     pad32,
     pad32r,
 )
 
-from eth.validation import (
+from scp.validation import (
     validate_lt_secpk1n,
     validate_gte,
     validate_lte,
 )
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 

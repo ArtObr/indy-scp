@@ -11,7 +11,7 @@ from eth_typing import (
     Hash32,
 )
 
-from eth.rlp.logs import Log
+from scp.rlp.logs import Log
 
 
 def hash_log_entries(log_entries: Iterable[Tuple[bytes, Tuple[int, ...], bytes]]) -> Hash32:

@@ -23,7 +23,7 @@ from eth_utils import (
     get_extended_debug_logger,
 )
 
-from eth.abc import (
+from scp.abc import (
     MemoryAPI,
     StackAPI,
     GasMeterAPI,
@@ -34,44 +34,44 @@ from eth.abc import (
     StateAPI,
     TransactionContextAPI,
 )
-from eth.constants import (
+from scp.constants import (
     GAS_MEMORY,
     GAS_MEMORY_QUADRATIC_DENOMINATOR,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     Halt,
     VMError,
 )
-from eth.typing import (
+from scp.typing import (
     BytesOrView,
 )
-from eth._utils.datatypes import (
+from scp._utils.datatypes import (
     Configurable,
 )
-from eth._utils.numeric import (
+from scp._utils.numeric import (
     ceil32,
 )
-from eth.validation import (
+from scp.validation import (
     validate_canonical_address,
     validate_is_bytes,
     validate_uint256,
 )
-from eth.vm.code_stream import (
+from scp.vm.code_stream import (
     CodeStream,
 )
-from eth.vm.gas_meter import (
+from scp.vm.gas_meter import (
     GasMeter,
 )
-from eth.vm.logic.invalid import (
+from scp.vm.logic.invalid import (
     InvalidOpcode,
 )
-from eth.vm.memory import (
+from scp.vm.memory import (
     Memory,
 )
-from eth.vm.message import (
+from scp.vm.message import (
     Message,
 )
-from eth.vm.stack import (
+from scp.vm.stack import (
     Stack,
 )
 

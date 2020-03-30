@@ -1,8 +1,8 @@
 import functools
 from scp.typing import Tuple
-from eth import constants
+from scp import constants
 
-from eth.vm.computation import BaseComputation
+from scp.vm.computation import BaseComputation
 
 
 def log_XX(computation: BaseComputation, topic_count: int) -> None:

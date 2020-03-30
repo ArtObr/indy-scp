@@ -8,10 +8,10 @@ from eth_utils.toolz import (
     merge,
 )
 
-from eth.tools.fixtures.helpers import (
+from scp.tools.fixtures.helpers import (
     get_test_name,
 )
-from eth.tools._utils.git import get_version_from_git
+from scp.tools._utils.git import get_version_from_git
 
 from .formatters import (
     filled_state_test_formatter,

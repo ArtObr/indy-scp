@@ -6,11 +6,11 @@ from eth_utils import (
     get_extended_debug_logger,
 )
 
-from eth.abc import GasMeterAPI
-from eth.exceptions import (
+from scp.abc import GasMeterAPI
+from scp.exceptions import (
     OutOfGas,
 )
-from eth.validation import (
+from scp.validation import (
     validate_uint256,
 )
 

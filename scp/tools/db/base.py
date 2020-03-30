@@ -1,6 +1,6 @@
 import pytest
 
-from eth.abc import DatabaseAPI
+from scp.abc import DatabaseAPI
 
 
 class DatabaseAPITestSuite:

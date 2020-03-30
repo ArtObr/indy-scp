@@ -6,10 +6,10 @@ from scp.typing import (
     Set
 )
 
-from eth.validation import (
+from scp.validation import (
     validate_is_bytes,
 )
-from eth.vm import opcode_values
+from scp.vm import opcode_values
 
 PUSH1, PUSH32, STOP = opcode_values.PUSH1, opcode_values.PUSH32, opcode_values.STOP
 

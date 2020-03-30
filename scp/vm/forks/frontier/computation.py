@@ -1,27 +1,27 @@
-from eth import precompiles
+from scp import precompiles
 
 from eth_hash.auto import keccak
 from eth_utils import (
     encode_hex,
 )
 
-from eth.constants import (
+from scp.constants import (
     GAS_CODEDEPOSIT,
     STACK_DEPTH_LIMIT,
 )
 
-from eth._utils.address import (
+from scp._utils.address import (
     force_bytes_to_address,
 )
-from eth.abc import (
+from scp.abc import (
     ComputationAPI,
 )
-from eth.exceptions import (
+from scp.exceptions import (
     OutOfGas,
     InsufficientFunds,
     StackDepthLimit,
 )
-from eth.vm.computation import (
+from scp.vm.computation import (
     BaseComputation,
 )
 
