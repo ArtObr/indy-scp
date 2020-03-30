@@ -1,6 +1,6 @@
 import copy
 import random
-from scp.typing import (
+from typing import (
     Any,
     Dict,
     List,

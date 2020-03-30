@@ -14,7 +14,7 @@ from scp.validation import (
     validate_stack_int,
 )
 
-from scp.typing import (
+from typing import (
     List,
     Tuple,
     Union

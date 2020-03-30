@@ -1,5 +1,5 @@
 import functools
-from scp.typing import cast, Iterable, Tuple
+from typing import cast, Iterable, Tuple
 
 import rlp
 

@@ -1,4 +1,4 @@
-from scp.typing import Tuple
+from typing import Tuple
 
 from eth_utils import (
     big_endian_to_int,

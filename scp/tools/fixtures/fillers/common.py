@@ -5,7 +5,7 @@ from functools import (
     partial,
     wraps,
 )
-from scp.typing import (
+from typing import (
     Any,
     Callable,
     Dict,

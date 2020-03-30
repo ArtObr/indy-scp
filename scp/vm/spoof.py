@@ -1,4 +1,4 @@
-from scp.typing import Any, Union
+from typing import Any, Union
 
 from scp.abc import SignedTransactionAPI, UnsignedTransactionAPI
 from scp._utils.spoof import SpoofAttributes

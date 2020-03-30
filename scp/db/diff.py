@@ -2,7 +2,7 @@ from collections.abc import (
     Mapping,
     MutableMapping,
 )
-from scp.typing import (
+from typing import (
     cast,
     Dict,
     Iterable,

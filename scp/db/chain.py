@@ -1,7 +1,7 @@
 import functools
 import itertools
 
-from scp.typing import (
+from typing import (
     Dict,
     Iterable,
     Tuple,

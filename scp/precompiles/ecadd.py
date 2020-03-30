@@ -1,4 +1,4 @@
-from scp.typing import Tuple
+from typing import Tuple
 
 from py_ecc import (
     optimized_bn128 as bn128,

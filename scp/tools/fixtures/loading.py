@@ -2,7 +2,7 @@ import functools
 import json
 import os
 
-from scp.typing import (
+from typing import (
     Any,
     Callable,
     Dict,

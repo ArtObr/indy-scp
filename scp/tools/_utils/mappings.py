@@ -1,7 +1,7 @@
 from collections.abc import Mapping
 import itertools
 
-from scp.typing import (
+from typing import (
     Any,
     Dict,
     Sequence,

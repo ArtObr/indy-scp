@@ -7,7 +7,6 @@ from .generation import (  # noqa: F401
     generate_fixture_tests,
 )
 from .helpers import (  # noqa: F401
-    new_chain_from_fixture,
     genesis_params_from_fixture,
     apply_fixture_block_to_chain,
     setup_state,

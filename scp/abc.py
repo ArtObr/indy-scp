@@ -1,8 +1,8 @@
-from scp.abc import (
+from abc import (
     ABC,
     abstractmethod
 )
-from scp.typing import (
+from typing import (
     Any,
     Callable,
     ClassVar,

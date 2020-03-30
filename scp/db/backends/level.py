@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 import logging
 from pathlib import Path
-from scp.typing import (
+from typing import (
     Iterator,
     TYPE_CHECKING,
 )

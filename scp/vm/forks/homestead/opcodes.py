@@ -1,5 +1,5 @@
 import copy
-from scp.typing import Dict
+from typing import Dict
 
 from eth_utils.toolz import merge
 

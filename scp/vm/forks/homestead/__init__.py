@@ -1,4 +1,4 @@
-from scp.typing import Optional, Type
+from typing import Optional, Type
 
 from eth_typing import BlockNumber
 

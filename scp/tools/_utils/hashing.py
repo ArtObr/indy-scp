@@ -2,7 +2,7 @@ from eth_hash.auto import keccak
 
 import rlp
 
-from scp.typing import (
+from typing import (
     Iterable,
     Tuple,
 )

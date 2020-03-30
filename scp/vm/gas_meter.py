@@ -1,4 +1,4 @@
-from scp.typing import (
+from typing import (
     Callable,
 )
 from eth_utils import (

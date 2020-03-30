@@ -1,4 +1,4 @@
-from scp.typing import Type
+from typing import Type
 
 from eth_bloom import (
     BloomFilter,

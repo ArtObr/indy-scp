@@ -1,4 +1,4 @@
-from scp.typing import Dict
+from typing import Dict
 
 from scp import constants
 

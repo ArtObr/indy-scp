@@ -1,6 +1,6 @@
 import binascii
 import functools
-from scp.typing import (
+from typing import (
     Any,
     AnyStr,
     Callable,

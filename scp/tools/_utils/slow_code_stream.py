@@ -1,7 +1,7 @@
 import contextlib
 import io
 import logging
-from scp.typing import (
+from typing import (
     Iterator,
     Set
 )

@@ -1,5 +1,5 @@
 import os
-from scp.typing import (
+from typing import (
     Any,
     Type,
     cast

@@ -1,5 +1,5 @@
 import contextlib
-from scp.typing import (
+from typing import (
     Iterator,
     Tuple,
     Type,

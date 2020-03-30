@@ -21,7 +21,8 @@ def new_transaction(
 
     The transaction will be signed with the given private key.
     """
-    nonce = vm.state.get_nonce(from_)
+    # nonce = vm.state.get_nonce(from_)
+    nonce = 1
     tx = vm.create_unsigned_transaction(
         nonce=nonce,
         gas_price=gas_price,

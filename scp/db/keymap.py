@@ -2,7 +2,7 @@ from scp.abc import (
     abstractmethod,
 )
 
-from scp.typing import (
+from typing import (
     Any,
 )
 

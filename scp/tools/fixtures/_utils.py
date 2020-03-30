@@ -2,7 +2,7 @@ import fnmatch
 import functools
 import os
 
-from scp.typing import (
+from typing import (
     Any,
     Callable,
     Iterable,

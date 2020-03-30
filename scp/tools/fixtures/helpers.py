@@ -2,7 +2,7 @@ import os
 
 import rlp
 
-from scp.typing import (
+from typing import (
     cast,
     Any,
     Dict,
@@ -17,7 +17,6 @@ from eth_utils import (
     to_normalized_address,
 )
 
-from scp import MainnetChain
 from scp.abc import (
     BlockAPI,
     ChainAPI,
@@ -25,12 +24,6 @@ from scp.abc import (
     VirtualMachineAPI,
 )
 from scp.db.atomic import AtomicDB
-from scp.chains.mainnet import (
-    MainnetDAOValidatorVM,
-)
-from scp.tools.builder.chain import (
-    disable_pow_check,
-)
 from scp.typing import (
     AccountState,
 )
@@ -38,14 +31,14 @@ from scp._utils.state import (
     diff_state,
 )
 from scp.vm.forks import (
-    PetersburgVM,
-    ConstantinopleVM,
-    ByzantiumVM,
-    TangerineWhistleVM,
+    # PetersburgVM,
+    # ConstantinopleVM,
+    # ByzantiumVM,
+    # TangerineWhistleVM,
     FrontierVM,
     HomesteadVM as BaseHomesteadVM,
-    SpuriousDragonVM,
-    IstanbulVM,
+    # SpuriousDragonVM,
+    # IstanbulVM,
 )
 
 
@@ -138,14 +131,6 @@ def chain_vm_configuration(fixture: Dict[str, Any]) -> Iterable[Tuple[int, Type[
             (0, HomesteadVM),
             (5, TangerineWhistleVM),
         )
-    elif network == 'HomesteadToDaoAt5':
-        HomesteadVM = MainnetDAOValidatorVM.configure(
-            support_dao_fork=True,
-            _dao_fork_block_number=5,
-        )
-        return (
-            (0, HomesteadVM),
-        )
     elif network == 'EIP158ToByzantiumAt5':
         return (
             (0, SpuriousDragonVM),
@@ -180,31 +165,10 @@ def genesis_params_from_fixture(fixture: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def new_chain_from_fixture(fixture: Dict[str, Any],
-                           chain_cls: Type[ChainAPI] = MainnetChain) -> ChainAPI:
-    base_db = AtomicDB()
-
-    vm_config = chain_vm_configuration(fixture)
-
-    ChainFromFixture = chain_cls.configure(
-        'ChainFromFixture',
-        vm_configuration=vm_config,
-    )
-
-    if 'sealEngine' in fixture and fixture['sealEngine'] == 'NoProof':
-        ChainFromFixture = disable_pow_check(ChainFromFixture)
-
-    return ChainFromFixture.from_genesis(
-        base_db,
-        genesis_params=genesis_params_from_fixture(fixture),
-        genesis_state=fixture['pre'],
-    )
-
-
 def apply_fixture_block_to_chain(
         block_fixture: Dict[str, Any],
         chain: ChainAPI,
-        perform_validation: bool=True) -> Tuple[BlockAPI, BlockAPI, BlockAPI]:
+        perform_validation: bool = True) -> Tuple[BlockAPI, BlockAPI, BlockAPI]:
     """
     :return: (premined_block, mined_block, rlp_encoded_mined_block)
     """

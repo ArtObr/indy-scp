@@ -3,7 +3,7 @@ from scp.abc import (
 )
 import itertools
 from types import TracebackType
-from scp.typing import (
+from typing import (
     Any,
     Callable,
     Dict,

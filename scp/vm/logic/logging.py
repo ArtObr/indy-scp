@@ -1,5 +1,5 @@
 import functools
-from scp.typing import Tuple
+from typing import Tuple
 from scp import constants
 
 from scp.vm.computation import BaseComputation

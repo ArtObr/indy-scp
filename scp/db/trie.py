@@ -1,5 +1,5 @@
 import functools
-from scp.typing import Dict, Sequence, Tuple, Union
+from typing import Dict, Sequence, Tuple, Union
 
 import rlp
 from trie import (

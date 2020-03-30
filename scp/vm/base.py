@@ -1,7 +1,7 @@
 import contextlib
 import itertools
 import logging
-from scp.typing import (
+from typing import (
     Any,
     ClassVar,
     Iterable,
@@ -40,9 +40,6 @@ from scp.abc import (
     StateAPI,
     UnsignedTransactionAPI,
     VirtualMachineAPI,
-)
-from scp.consensus.pow import (
-    PowConsensus,
 )
 from scp.constants import (
     GENESIS_PARENT_HASH,
@@ -86,7 +83,7 @@ from scp.vm.message import (
 
 class VM(Configurable, VirtualMachineAPI):
     block_class: Type[BlockAPI] = None
-    consensus_class: Type[ConsensusAPI] = PowConsensus
+    consensus_class: Type[ConsensusAPI] = None
     extra_data_max_bytes: ClassVar[int] = 32
     fork: str = None  # noqa: E701  # flake8 bug that's fixed in 3.6.0+
     chaindb: ChainDatabaseAPI = None
@@ -156,10 +153,10 @@ class VM(Configurable, VirtualMachineAPI):
                           header: BlockHeaderAPI,
                           transaction: SignedTransactionAPI
                           ) -> Tuple[ReceiptAPI, ComputationAPI]:
-        self.validate_transaction_against_header(header, transaction)
+        # self.validate_transaction_against_header(header, transaction)
 
         # Mark current state as un-revertable, since new transaction is starting...
-        self.state.lock_changes()
+        # self.state.lock_changes()
 
         computation = self.state.apply_transaction(transaction)
         receipt = self.make_receipt(header, transaction, computation, self.state)

@@ -1,4 +1,4 @@
-from scp.typing import NamedTuple
+from typing import NamedTuple
 
 from eth_utils import (
     encode_hex,

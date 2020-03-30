@@ -1,5 +1,5 @@
 import collections
-from scp.typing import cast, Dict, Set, Union
+from typing import cast, Dict, Set, Union
 import uuid
 
 from eth_utils.toolz import (

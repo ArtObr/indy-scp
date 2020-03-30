@@ -1,4 +1,4 @@
-from scp.typing import Optional
+from typing import Optional
 
 from scp.abc import ChainContextAPI
 from scp.validation import (

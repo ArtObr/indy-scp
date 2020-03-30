@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 import logging
-from scp.typing import (
+from typing import (
     Iterator,
 )
 
@@ -8,7 +8,7 @@ from eth_utils import (
     ValidationError,
 )
 
-from scp.abc import (
+from abc import (
     AtomicWriteBatchAPI,
     DatabaseAPI,
 )

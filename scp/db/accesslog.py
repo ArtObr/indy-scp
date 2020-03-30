@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 import logging
-from scp.typing import (
+from typing import (
     Iterator,
     FrozenSet,
     Set,
