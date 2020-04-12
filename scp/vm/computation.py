@@ -447,18 +447,19 @@ class BaseComputation(Configurable, ComputationAPI):
     #
     def __enter__(self) -> ComputationAPI:
         if self.logger.show_debug2:
-            self.logger.debug2(
-                (
-                    "COMPUTATION STARTING: gas: %s | from: %s | to: %s | value: %s "
-                    "| depth %s | static: %s"
-                ),
-                self.msg.gas,
-                encode_hex(self.msg.sender),
-                encode_hex(self.msg.to),
-                self.msg.value,
-                self.msg.depth,
-                "y" if self.msg.is_static else "n",
-            )
+            pass
+            # self.logger.debug2(
+            #     (
+            #         "COMPUTATION STARTING: gas: %s | from: %s | to: %s | value: %s "
+            #         "| depth %s | static: %s"
+            #     ),
+            #     self.msg.gas,
+            #     encode_hex(self.msg.sender),
+            #     encode_hex(self.msg.to),
+            #     self.msg.value,
+            #     self.msg.depth,
+            #     "y" if self.msg.is_static else "n",
+            # )
 
         return self
 
@@ -467,20 +468,20 @@ class BaseComputation(Configurable, ComputationAPI):
                  exc_value: Optional[BaseException],
                  traceback: Optional[TracebackType]) -> Union[None, bool]:
         if exc_value and isinstance(exc_value, VMError):
-            if self.logger.show_debug2:
-                self.logger.debug2(
-                    (
-                        "COMPUTATION ERROR: gas: %s | from: %s | to: %s | value: %s | "
-                        "depth: %s | static: %s | error: %s"
-                    ),
-                    self.msg.gas,
-                    encode_hex(self.msg.sender),
-                    encode_hex(self.msg.to),
-                    self.msg.value,
-                    self.msg.depth,
-                    "y" if self.msg.is_static else "n",
-                    exc_value,
-                )
+            # if self.logger.show_debug2:
+            #     self.logger.debug2(
+            #         (
+            #             "COMPUTATION ERROR: gas: %s | from: %s | to: %s | value: %s | "
+            #             "depth: %s | static: %s | error: %s"
+            #         ),
+            #         self.msg.gas,
+            #         encode_hex(self.msg.sender),
+            #         encode_hex(self.msg.to),
+            #         self.msg.value,
+            #         self.msg.depth,
+            #         "y" if self.msg.is_static else "n",
+            #         exc_value,
+            #     )
             self._error = exc_value
             if self.should_burn_gas:
                 self.consume_gas(
@@ -494,19 +495,20 @@ class BaseComputation(Configurable, ComputationAPI):
             # suppress VM exceptions
             return True
         elif exc_type is None and self.logger.show_debug2:
-            self.logger.debug2(
-                (
-                    "COMPUTATION SUCCESS: from: %s | to: %s | value: %s | "
-                    "depth: %s | static: %s | gas-used: %s | gas-remaining: %s"
-                ),
-                encode_hex(self.msg.sender),
-                encode_hex(self.msg.to),
-                self.msg.value,
-                self.msg.depth,
-                "y" if self.msg.is_static else "n",
-                self.get_gas_used(),
-                self._gas_meter.gas_remaining,
-            )
+            pass
+            # self.logger.debug2(
+            #     (
+            #         "COMPUTATION SUCCESS: from: %s | to: %s | value: %s | "
+            #         "depth: %s | static: %s | gas-used: %s | gas-remaining: %s"
+            #     ),
+            #     encode_hex(self.msg.sender),
+            #     encode_hex(self.msg.to),
+            #     self.msg.value,
+            #     self.msg.depth,
+            #     "y" if self.msg.is_static else "n",
+            #     self.get_gas_used(),
+            #     self._gas_meter.gas_remaining,
+            # )
 
         return None
 

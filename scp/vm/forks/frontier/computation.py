@@ -46,30 +46,30 @@ class FrontierComputation(BaseComputation):
     _precompiles = FRONTIER_PRECOMPILES     # type: ignore # https://github.com/python/mypy/issues/708 # noqa: E501
 
     def apply_message(self) -> ComputationAPI:
-        snapshot = self.state.snapshot()
+        # snapshot = self.state.snapshot()
 
         if self.msg.depth > STACK_DEPTH_LIMIT:
             raise StackDepthLimit("Stack depth limit reached")
 
         if self.msg.should_transfer_value and self.msg.value:
-            sender_balance = self.state.get_balance(self.msg.sender)
+            # sender_balance = self.state.get_balance(self.msg.sender)
 
-            if sender_balance < self.msg.value:
+            if 999999999999999 < self.msg.value:
                 raise InsufficientFunds(
-                    f"Insufficient funds: {sender_balance} < {self.msg.value}"
+                    f"Insufficient funds: {9999999999999} < {self.msg.value}"
                 )
 
-            self.state.delta_balance(self.msg.sender, -1 * self.msg.value)
-            self.state.delta_balance(self.msg.storage_address, self.msg.value)
+            # self.state.delta_balance(self.msg.sender, -1 * self.msg.value)
+            # self.state.delta_balance(self.msg.storage_address, self.msg.value)
 
-            self.logger.debug2(
-                "TRANSFERRED: %s from %s -> %s",
-                self.msg.value,
-                encode_hex(self.msg.sender),
-                encode_hex(self.msg.storage_address),
-            )
+            # self.logger.debug2(
+            #     "TRANSFERRED: %s from %s -> %s",
+            #     self.msg.value,
+            #     encode_hex(self.msg.sender),
+            #     encode_hex(self.msg.storage_address),
+            # )
 
-        self.state.touch_account(self.msg.storage_address)
+        # self.state.touch_account(self.msg.storage_address)
 
         computation = self.apply_computation(
             self.state,
@@ -77,10 +77,10 @@ class FrontierComputation(BaseComputation):
             self.transaction_context,
         )
 
-        if computation.is_error:
-            self.state.revert(snapshot)
-        else:
-            self.state.commit(snapshot)
+        # if computation.is_error:
+        #     self.state.revert(snapshot)
+        # else:
+        #     self.state.commit(snapshot)
 
         return computation
 

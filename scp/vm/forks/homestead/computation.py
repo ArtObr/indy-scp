@@ -25,12 +25,12 @@ class HomesteadComputation(FrontierComputation):
     opcodes = HOMESTEAD_OPCODES
 
     def apply_create_message(self) -> ComputationAPI:
-        snapshot = self.state.snapshot()
+        # snapshot = self.state.snapshot()
 
         computation = self.apply_message()
 
         if computation.is_error:
-            self.state.revert(snapshot)
+            # self.state.revert(snapshot)
             return computation
         else:
             contract_code = computation.output
@@ -46,7 +46,7 @@ class HomesteadComputation(FrontierComputation):
                     # Different from Frontier: reverts state on gas failure while
                     # writing contract code.
                     computation.error = err
-                    self.state.revert(snapshot)
+                    # self.state.revert(snapshot)
                 else:
                     if self.logger:
                         self.logger.debug2(
@@ -57,7 +57,8 @@ class HomesteadComputation(FrontierComputation):
                         )
 
                     self.state.set_code(self.msg.storage_address, contract_code)
-                    self.state.commit(snapshot)
+                    # self.state.commit(snapshot)
             else:
-                self.state.commit(snapshot)
+                pass
+                # self.state.commit(snapshot)
             return computation

@@ -8,7 +8,7 @@ from eth_utils import (
     ValidationError,
 )
 
-from abc import (
+from scp.abc import (
     AtomicWriteBatchAPI,
     DatabaseAPI,
 )

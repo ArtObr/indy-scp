@@ -24,18 +24,18 @@ class ExecutionContext(ExecutionContextAPI):
 
     def __init__(
             self,
-            coinbase: Address,
-            timestamp: int,
-            block_number: BlockNumber,
-            difficulty: int,
-            gas_limit: int,
+            # coinbase: Address,
+            # timestamp: int,
+            # block_number: BlockNumber,
+            # difficulty: int,
+            # gas_limit: int,
             prev_hashes: Iterable[Hash32],
             chain_id: int) -> None:
-        self._coinbase = coinbase
-        self._timestamp = timestamp
-        self._block_number = block_number
-        self._difficulty = difficulty
-        self._gas_limit = gas_limit
+        # self._coinbase = coinbase
+        # self._timestamp = timestamp
+        # self._block_number = block_number
+        # self._difficulty = difficulty
+        # self._gas_limit = gas_limit
         self._prev_hashes = CachedIterable(prev_hashes)
         self._chain_id = chain_id
 

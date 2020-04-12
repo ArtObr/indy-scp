@@ -47,7 +47,7 @@ class Message(MessageAPI):
             validate_canonical_address(to, title="Message.to")
         self.to = to
 
-        validate_canonical_address(sender, title="Message.sender")
+        # validate_canonical_address(sender, title="Message.sender")
         self.sender = sender
 
         validate_uint256(value, title="Message.value")

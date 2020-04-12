@@ -122,7 +122,7 @@ class VM(Configurable, VirtualMachineAPI):
             self._state = self.build_state(self.chaindb.db,
                                            self.get_header(),
                                            self.chain_context,
-                                           self.previous_hashes)
+                                           [])
         return self._state
 
     @classmethod
@@ -133,7 +133,7 @@ class VM(Configurable, VirtualMachineAPI):
                     previous_hashes: Iterable[Hash32] = (),
                     ) -> StateAPI:
         execution_context = cls.create_execution_context(header, previous_hashes, chain_context)
-        return cls.get_state_class()(db, execution_context, header.state_root)
+        return cls.get_state_class()(db, execution_context, 'header.state_root')
 
     @cached_property
     def _consensus(self) -> ConsensusAPI:
@@ -169,13 +169,12 @@ class VM(Configurable, VirtualMachineAPI):
                                  header: BlockHeaderAPI,
                                  prev_hashes: Iterable[Hash32],
                                  chain_context: ChainContextAPI) -> ExecutionContextAPI:
-        fee_recipient = cls.consensus_class.get_fee_recipient(header)
         return ExecutionContext(
-            coinbase=fee_recipient,
-            timestamp=header.timestamp,
-            block_number=header.block_number,
-            difficulty=header.difficulty,
-            gas_limit=header.gas_limit,
+            # coinbase=fee_recipient,
+            # timestamp=header.timestamp,
+            # block_number=header.block_number,
+            # difficulty=header.difficulty,
+            # gas_limit=header.gas_limit,
             prev_hashes=prev_hashes,
             chain_id=chain_context.chain_id,
         )

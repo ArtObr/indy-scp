@@ -53,11 +53,11 @@ def make_frontier_receipt(base_header: BlockHeaderAPI,
         gas_refund,
         (transaction.gas - gas_remaining) // 2,
     )
-    gas_used = base_header.gas_used + tx_gas_used
+    # gas_used = base_header.gas_used + tx_gas_used
 
     receipt = Receipt(
         state_root=ZERO_HASH32,
-        gas_used=gas_used,
+        gas_used=555,
         logs=logs,
     )
 
@@ -111,5 +111,5 @@ class FrontierVM(VM):
         receipt_without_state_root = make_frontier_receipt(base_header, transaction, computation)
 
         return receipt_without_state_root.copy(
-            state_root=state.make_state_root()
+            state_root=b'asdf'#state.make_state_root()
         )

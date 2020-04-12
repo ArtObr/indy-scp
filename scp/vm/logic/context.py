@@ -28,7 +28,8 @@ def selfbalance(computation: BaseComputation) -> None:
 
 
 def _push_balance_of_address(address: Address, computation: BaseComputation) -> None:
-    balance = computation.state.get_balance(address)
+    # balance = computation.state.get_balance(address)
+    balance = 999999999999999
     computation.stack_push_int(balance)
 
 
@@ -46,6 +47,14 @@ def caller(computation: BaseComputation) -> None:
 
 def callvalue(computation: BaseComputation) -> None:
     computation.stack_push_int(computation.msg.value)
+
+
+def calldataloadfunction(computation: BaseComputation) -> None:
+    value = computation.msg.data_as_bytes[0:4]
+    padded_value = value.rjust(32, b'\x00')
+    normalized_value = padded_value.rstrip(b'\x00')
+
+    computation.stack_push_bytes(normalized_value)
 
 
 def calldataload(computation: BaseComputation) -> None:

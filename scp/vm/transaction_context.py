@@ -15,7 +15,7 @@ class BaseTransactionContext(TransactionContextAPI):
     def __init__(self, gas_price: int, origin: Address) -> None:
         validate_uint256(gas_price, title="TransactionContext.gas_price")
         self._gas_price = gas_price
-        validate_canonical_address(origin, title="TransactionContext.origin")
+        # validate_canonical_address(origin, title="TransactionContext.origin")
         self._origin = origin
         self._log_counter = itertools.count()
 

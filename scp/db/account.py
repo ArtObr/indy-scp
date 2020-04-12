@@ -121,6 +121,13 @@ class AccountDB(AccountDatabaseAPI):
         self._account_stores: Dict[Address, AccountStorageDatabaseAPI] = {}
         self._dirty_accounts: Set[Address] = set()
         self._root_hash_at_last_persist = state_root
+        self.storages = {
+            b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:' : {
+            }
+        }
+        self.account_code = {
+
+        }
 
     @property
     def state_root(self) -> Hash32:
@@ -142,17 +149,16 @@ class AccountDB(AccountDatabaseAPI):
         validate_canonical_address(address, title="Storage Address")
         validate_uint256(slot, title="Storage Slot")
 
-        account_store = self._get_address_store(address)
-        return account_store.get(slot, from_journal)
+        account_store = self.storages.get(address)
+        return account_store.get(slot)
 
     def set_storage(self, address: Address, slot: int, value: int) -> None:
         validate_uint256(value, title="Storage Value")
         validate_uint256(slot, title="Storage Slot")
         validate_canonical_address(address, title="Storage Address")
 
-        account_store = self._get_address_store(address)
-        self._dirty_accounts.add(address)
-        account_store.set(slot, value)
+        account_store = self.storages.get(address)
+        account_store[slot] = value
 
     def delete_storage(self, address: Address) -> None:
         validate_canonical_address(address, title="Storage Address")
@@ -172,8 +178,8 @@ class AccountDB(AccountDatabaseAPI):
         if address in self._account_stores:
             store = self._account_stores[address]
         else:
-            storage_root = self._get_storage_root(address)
-            store = AccountStorageDB(self._raw_store_db, storage_root, address)
+            # storage_root = self._get_storage_root(address)
+            store = AccountStorageDB(self._raw_store_db, b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:', address)
             self._account_stores[address] = store
         return store
 
@@ -250,24 +256,14 @@ class AccountDB(AccountDatabaseAPI):
     def get_code(self, address: Address) -> bytes:
         validate_canonical_address(address, title="Storage Address")
 
-        code_hash = self.get_code_hash(address)
-        if code_hash == EMPTY_SHA3:
-            return b''
-        else:
-            try:
-                return self._journaldb[code_hash]
-            except KeyError:
-                raise MissingBytecode(code_hash) from KeyError
+        return self.account_code[address]
 
     def set_code(self, address: Address, code: bytes) -> None:
         validate_canonical_address(address, title="Storage Address")
         validate_is_bytes(code, title="Code")
 
-        account = self._get_account(address)
+        self.account_code[address] = code
 
-        code_hash = keccak(code)
-        self._journaldb[code_hash] = code
-        self._set_account(address, account.copy(code_hash=code_hash))
 
     def get_code_hash(self, address: Address) -> Hash32:
         validate_canonical_address(address, title="Storage Address")

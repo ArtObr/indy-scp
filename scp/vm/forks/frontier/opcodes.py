@@ -188,6 +188,11 @@ FRONTIER_OPCODES: Dict[int, OpcodeAPI] = {
         logic_fn=context.calldataload,
         mnemonic=mnemonics.CALLDATALOAD,
         gas_cost=constants.GAS_VERYLOW,
+
+    ), opcode_values.CALLDATALOADFUNCTION: as_opcode(
+        logic_fn=context.calldataloadfunction,
+        mnemonic=mnemonics.CALLDATALOADFUNCTION,
+        gas_cost=constants.GAS_VERYLOW,
     ),
     opcode_values.CALLDATASIZE: as_opcode(
         logic_fn=context.calldatasize,
