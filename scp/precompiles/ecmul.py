@@ -26,15 +26,15 @@ from scp._utils.padding import (
     pad32r,
 )
 
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
 @curry
 def ecmul(
-        computation: BaseComputation,
-        gas_cost: int = constants.GAS_ECMUL) -> BaseComputation:
+        computation: ComputationAPI,
+        gas_cost: int = constants.GAS_ECMUL) -> ComputationAPI:
 
     computation.consume_gas(gas_cost, reason='ECMUL Precompile')
 

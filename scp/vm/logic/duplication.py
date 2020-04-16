@@ -1,9 +1,9 @@
 import functools
 
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 
 
-def dup_XX(computation: BaseComputation, position: int) -> None:
+def dup_XX(computation: ComputationAPI, position: int) -> None:
     """
     Stack item duplication.
     """

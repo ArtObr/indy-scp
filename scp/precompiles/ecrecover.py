@@ -20,12 +20,12 @@ from scp.validation import (
     validate_gte,
     validate_lte,
 )
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
-def ecrecover(computation: BaseComputation) -> BaseComputation:
+def ecrecover(computation: ComputationAPI) -> ComputationAPI:
     computation.consume_gas(constants.GAS_ECRECOVER, reason="ECRecover Precompile")
     data = computation.msg.data_as_bytes
     raw_message_hash = data[:32]

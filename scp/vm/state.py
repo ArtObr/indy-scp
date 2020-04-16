@@ -35,6 +35,7 @@ from scp.constants import (
 from scp.exceptions import ContractCreationCollision
 from scp.vm.computation import BaseComputation
 from scp.vm.message import Message
+from scp.vm.transaction import HomesteadUnsignedTransaction
 
 
 class VMTransactionExecutor(TransactionExecutorAPI):
@@ -56,16 +57,8 @@ class VMTransactionExecutor(TransactionExecutorAPI):
 
     def build_evm_message(self, transaction: SignedTransactionAPI) -> MessageAPI:
 
-        gas_fee = transaction.gas * transaction.gas_price
-
-        # Buy Gas
-        # self.vm_state.delta_balance(transaction.sender, -1 * gas_fee)
-
         # Increment Nonce
         # self.vm_state.increment_nonce(transaction.sender)
-
-        # Setup VM Message
-        message_gas = transaction.gas - transaction.intrinsic_gas
 
         if transaction.to == CREATE_CONTRACT_ADDRESS:
             contract_address = generate_contract_address(
@@ -82,7 +75,7 @@ class VMTransactionExecutor(TransactionExecutorAPI):
             code = self.vm_state.get_code(transaction.to)
 
         message = Message(
-            gas=message_gas,
+            gas=1,
             to=transaction.to,
             sender=transaction.sender,
             value=transaction.value,
@@ -142,7 +135,13 @@ class VMState(Configurable, StateAPI):
             self,
             db: AtomicDatabaseAPI) -> None:
         self._db = db
-        self._account_db = self.get_account_db_class()(db, b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:')
+        self._account_db = {
+
+        }
+        self._account_storage = {
+            b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:': {
+            }
+        }
 
     def apply_transaction(self, transaction: SignedTransactionAPI) -> ComputationAPI:
         executor = self.get_transaction_executor()
@@ -185,11 +184,6 @@ class VMState(Configurable, StateAPI):
     #
     # Access to account db
     #
-    @classmethod
-    def get_account_db_class(cls):
-        if cls.account_db_class is None:
-            raise AttributeError(f"No account_db_class set for {cls.__name__}")
-        return cls.account_db_class
 
     @property
     def state_root(self) -> Hash32:
@@ -199,10 +193,12 @@ class VMState(Configurable, StateAPI):
         return self._account_db.make_state_root()
 
     def get_storage(self, address: Address, slot: int, from_journal: bool = True) -> int:
-        return self._account_db.get_storage(address, slot, from_journal)
+        storage = self._account_storage.get(address)
+        return storage.get(slot)
 
     def set_storage(self, address: Address, slot: int, value: int) -> None:
-        return self._account_db.set_storage(address, slot, value)
+        storage = self._account_storage.get(address)
+        storage[slot] = value
 
     def delete_storage(self, address: Address) -> None:
         self._account_db.delete_storage(address)
@@ -229,10 +225,10 @@ class VMState(Configurable, StateAPI):
         self._account_db.increment_nonce(address)
 
     def get_code(self, address: Address) -> bytes:
-        return self._account_db.get_code(address)
+        return self._account_db.get(address)
 
     def set_code(self, address: Address, code: bytes) -> None:
-        self._account_db.set_code(address, code)
+        self._account_db[address] = code
 
     def get_code_hash(self, address: Address) -> Hash32:
         return self._account_db.get_code_hash(address)
@@ -312,3 +308,14 @@ class VMState(Configurable, StateAPI):
     #
     def get_transaction_executor(self) -> TransactionExecutorAPI:
         return self.transaction_executor_class(self)
+
+    @classmethod
+    def create_unsigned_transaction(cls,
+                                    *,
+                                    nonce: int,
+                                    gas_price: int,
+                                    gas: int,
+                                    to: Address,
+                                    value: int,
+                                    data: bytes) -> 'HomesteadUnsignedTransaction':
+        return HomesteadUnsignedTransaction(nonce, gas_price, gas, to, value, data)

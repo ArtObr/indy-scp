@@ -87,9 +87,9 @@ def test_apply_transaction():
     amount = 0
     from_ = b''
     tx = new_transaction(vm, from_, recipient, amount, b'', data=contract_code)
-    computation = vm.apply_transaction(vm.get_header(), tx)
+    computation = vm.apply_transaction(tx)
 
     recipient = b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:'
     tx = new_transaction(vm, from_, recipient, amount, b'', data=call_get_value_code)
-    computation = vm.apply_transaction(vm.get_header(), tx)
+    computation = vm.apply_transaction(tx)
     assert computation.output.decode('utf-8').lstrip('\0') == 'Hello World'

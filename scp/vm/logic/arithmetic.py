@@ -8,10 +8,10 @@ from scp._utils.numeric import (
     signed_to_unsigned,
     ceil8,
 )
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 
 
-def add(computation: BaseComputation) -> None:
+def add(computation: ComputationAPI) -> None:
     """
     Addition
     """
@@ -22,7 +22,7 @@ def add(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def addmod(computation: BaseComputation) -> None:
+def addmod(computation: ComputationAPI) -> None:
     """
     Modulo Addition
     """
@@ -36,7 +36,7 @@ def addmod(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def sub(computation: BaseComputation) -> None:
+def sub(computation: ComputationAPI) -> None:
     """
     Subtraction
     """
@@ -47,7 +47,7 @@ def sub(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def mod(computation: BaseComputation) -> None:
+def mod(computation: ComputationAPI) -> None:
     """
     Modulo
     """
@@ -61,7 +61,7 @@ def mod(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def smod(computation: BaseComputation) -> None:
+def smod(computation: ComputationAPI) -> None:
     """
     Signed Modulo
     """
@@ -80,7 +80,7 @@ def smod(computation: BaseComputation) -> None:
     computation.stack_push_int(signed_to_unsigned(result))
 
 
-def mul(computation: BaseComputation) -> None:
+def mul(computation: ComputationAPI) -> None:
     """
     Multiplication
     """
@@ -91,7 +91,7 @@ def mul(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def mulmod(computation: BaseComputation) -> None:
+def mulmod(computation: ComputationAPI) -> None:
     """
     Modulo Multiplication
     """
@@ -104,7 +104,7 @@ def mulmod(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def div(computation: BaseComputation) -> None:
+def div(computation: ComputationAPI) -> None:
     """
     Division
     """
@@ -118,7 +118,7 @@ def div(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def sdiv(computation: BaseComputation) -> None:
+def sdiv(computation: ComputationAPI) -> None:
     """
     Signed Division
     """
@@ -138,7 +138,7 @@ def sdiv(computation: BaseComputation) -> None:
 
 
 @curry
-def exp(computation: BaseComputation, gas_per_byte: int) -> None:
+def exp(computation: ComputationAPI, gas_per_byte: int) -> None:
     """
     Exponentiation
     """
@@ -162,7 +162,7 @@ def exp(computation: BaseComputation, gas_per_byte: int) -> None:
     computation.stack_push_int(result)
 
 
-def signextend(computation: BaseComputation) -> None:
+def signextend(computation: ComputationAPI) -> None:
     """
     Signed Extend
     """
@@ -181,7 +181,7 @@ def signextend(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def shl(computation: BaseComputation) -> None:
+def shl(computation: ComputationAPI) -> None:
     """
     Bitwise left shift
     """
@@ -195,7 +195,7 @@ def shl(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def shr(computation: BaseComputation) -> None:
+def shr(computation: ComputationAPI) -> None:
     """
     Bitwise right shift
     """
@@ -209,7 +209,7 @@ def shr(computation: BaseComputation) -> None:
     computation.stack_push_int(result)
 
 
-def sar(computation: BaseComputation) -> None:
+def sar(computation: ComputationAPI) -> None:
     """
     Arithmetic bitwise right shift
     """

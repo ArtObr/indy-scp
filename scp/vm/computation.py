@@ -220,20 +220,7 @@ class BaseComputation(Configurable, ComputationAPI):
                 after_cost,
             )
 
-        if size:
-            if before_cost < after_cost:
-                gas_fee = after_cost - before_cost
-                self._gas_meter.consume_gas(
-                    gas_fee,
-                    reason=" ".join((
-                        "Expanding memory",
-                        str(before_size),
-                        "->",
-                        str(after_size),
-                    ))
-                )
-
-            self._memory.extend(start_position, size)
+        self._memory.extend(start_position, size)
 
     def memory_write(self, start_position: int, size: int, value: bytes) -> None:
         return self._memory.write(start_position, size, value)
@@ -481,15 +468,6 @@ class BaseComputation(Configurable, ComputationAPI):
             #         exc_value,
             #     )
             self._error = exc_value
-            if self.should_burn_gas:
-                self.consume_gas(
-                    self._gas_meter.gas_remaining,
-                    reason=" ".join((
-                        "Zeroing gas due to VM Exception:",
-                        str(exc_value),
-                    )),
-                )
-
             # suppress VM exceptions
             return True
         elif exc_type is None and self.logger.show_debug2:
@@ -513,7 +491,6 @@ class BaseComputation(Configurable, ComputationAPI):
     #
     # State Transition
     #
-    @abstractmethod
     def apply_message(self) -> ComputationAPI:
         if self.msg.depth > STACK_DEPTH_LIMIT:
             raise StackDepthLimit("Stack depth limit reached")
@@ -530,7 +507,6 @@ class BaseComputation(Configurable, ComputationAPI):
 
         return computation
 
-    @abstractmethod
     def apply_create_message(self) -> ComputationAPI:
         # snapshot = self.state.snapshot()
 

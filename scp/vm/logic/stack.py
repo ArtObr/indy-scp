@@ -1,13 +1,13 @@
 import functools
 
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 
 
-def pop(computation: BaseComputation) -> None:
+def pop(computation: ComputationAPI) -> None:
     computation.stack_pop1_any()
 
 
-def push_XX(computation: BaseComputation, size: int) -> None:
+def push_XX(computation: ComputationAPI, size: int) -> None:
     raw_value = computation.code.read(size)
 
     # This is a performance-sensitive area.

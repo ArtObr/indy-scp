@@ -4,17 +4,17 @@ from scp.exceptions import (
     Halt,
 )
 
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 from scp.vm.opcode_values import (
     JUMPDEST,
 )
 
 
-def stop(computation: BaseComputation) -> None:
+def stop(computation: ComputationAPI) -> None:
     raise Halt('STOP')
 
 
-def jump(computation: BaseComputation) -> None:
+def jump(computation: ComputationAPI) -> None:
     jump_dest = computation.stack_pop1_int()
 
     computation.code.program_counter = jump_dest
@@ -28,7 +28,7 @@ def jump(computation: BaseComputation) -> None:
         raise InvalidInstruction("Jump resulted in invalid instruction")
 
 
-def jumpi(computation: BaseComputation) -> None:
+def jumpi(computation: ComputationAPI) -> None:
     jump_dest, check_value = computation.stack_pop_ints(2)
 
     if check_value:
@@ -43,17 +43,17 @@ def jumpi(computation: BaseComputation) -> None:
             raise InvalidInstruction("Jump resulted in invalid instruction")
 
 
-def jumpdest(computation: BaseComputation) -> None:
+def jumpdest(computation: ComputationAPI) -> None:
     pass
 
 
-def program_counter(computation: BaseComputation) -> None:
+def program_counter(computation: ComputationAPI) -> None:
     pc = max(computation.code.program_counter - 1, 0)
 
     computation.stack_push_int(pc)
 
 
-def gas(computation: BaseComputation) -> None:
+def gas(computation: ComputationAPI) -> None:
     gas_remaining = computation.get_gas_remaining()
 
     computation.stack_push_int(gas_remaining)

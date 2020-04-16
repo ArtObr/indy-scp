@@ -46,10 +46,6 @@ class Opcode(Configurable, OpcodeAPI):
                 Wrapper functionf or the logic function which consumes the base
                 opcode gas cost prior to execution.
                 """
-                computation.consume_gas(
-                    gas_cost,
-                    mnemonic,
-                )
                 return logic_fn(computation)
         else:
             wrapped_logic_fn = logic_fn

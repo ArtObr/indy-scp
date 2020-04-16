@@ -1078,12 +1078,6 @@ class ComputationAPI(ContextManager['ComputationAPI'], StackManipulationAPI):
     #
     # Gas Consumption
     #
-    @abstractmethod
-    def get_gas_meter(self) -> GasMeterAPI:
-        """
-        Return the :class:`~eth.abc.GasMeterAPI` of the computation.
-        """
-        ...
 
     @abstractmethod
     def consume_gas(self, amount: int, reason: str) -> None:

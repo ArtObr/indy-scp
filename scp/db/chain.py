@@ -24,7 +24,6 @@ from trie.exceptions import (
 from scp.abc import (
     BlockAPI,
     BlockHeaderAPI,
-    ChainDatabaseAPI,
     DatabaseAPI,
     AtomicDatabaseAPI,
     ReceiptAPI,
@@ -69,7 +68,7 @@ class TransactionKey(rlp.Serializable):
     ]
 
 
-class ChainDB(HeaderDB, ChainDatabaseAPI):
+class ChainDB(HeaderDB):
     def __init__(self, db: AtomicDatabaseAPI) -> None:
         self.db = db
 

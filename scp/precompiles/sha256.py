@@ -6,12 +6,12 @@ from scp._utils.numeric import (
     ceil32,
 )
 
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
-def sha256(computation: BaseComputation) -> BaseComputation:
+def sha256(computation: ComputationAPI) -> ComputationAPI:
     word_count = ceil32(len(computation.msg.data)) // 32
     gas_fee = constants.GAS_SHA256 + word_count * constants.GAS_SHA256WORD
 

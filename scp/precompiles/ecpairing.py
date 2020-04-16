@@ -30,8 +30,8 @@ from scp._utils.padding import (
     pad32,
 )
 
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
@@ -41,9 +41,9 @@ EXPONENT = bn128.FQ12.one()
 
 @curry
 def ecpairing(
-        computation: BaseComputation,
+        computation: ComputationAPI,
         gas_cost_base: int = constants.GAS_ECPAIRING_BASE,
-        gas_cost_per_point: int = constants.GAS_ECPAIRING_PER_POINT) -> BaseComputation:
+        gas_cost_per_point: int = constants.GAS_ECPAIRING_PER_POINT) -> ComputationAPI:
 
     if len(computation.msg.data) % 192:
         # data length must be an exact multiple of 192

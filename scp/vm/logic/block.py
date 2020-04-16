@@ -1,7 +1,7 @@
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 
 
-def blockhash(computation: BaseComputation) -> None:
+def blockhash(computation: ComputationAPI) -> None:
     block_number = computation.stack_pop1_int()
 
     block_hash = computation.state.get_ancestor_hash(block_number)
@@ -9,21 +9,21 @@ def blockhash(computation: BaseComputation) -> None:
     computation.stack_push_bytes(block_hash)
 
 
-def coinbase(computation: BaseComputation) -> None:
+def coinbase(computation: ComputationAPI) -> None:
     computation.stack_push_bytes(computation.state.coinbase)
 
 
-def timestamp(computation: BaseComputation) -> None:
+def timestamp(computation: ComputationAPI) -> None:
     computation.stack_push_int(computation.state.timestamp)
 
 
-def number(computation: BaseComputation) -> None:
+def number(computation: ComputationAPI) -> None:
     computation.stack_push_int(computation.state.block_number)
 
 
-def difficulty(computation: BaseComputation) -> None:
+def difficulty(computation: ComputationAPI) -> None:
     computation.stack_push_int(computation.state.difficulty)
 
 
-def gaslimit(computation: BaseComputation) -> None:
+def gaslimit(computation: ComputationAPI) -> None:
     computation.stack_push_int(computation.state.gas_limit)

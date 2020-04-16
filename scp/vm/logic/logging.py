@@ -2,10 +2,10 @@ import functools
 from typing import Tuple
 
 from scp import constants
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 
 
-def log_XX(computation: BaseComputation, topic_count: int) -> None:
+def log_XX(computation: ComputationAPI, topic_count: int) -> None:
     if topic_count < 0 or topic_count > 4:
         raise TypeError("Invalid log topic size.  Must be 0, 1, 2, 3, or 4")
 

@@ -26,15 +26,15 @@ from scp._utils.padding import (
     pad32r,
 )
 
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
 @curry
 def ecadd(
-        computation: BaseComputation,
-        gas_cost: int = constants.GAS_ECADD) -> BaseComputation:
+        computation: ComputationAPI,
+        gas_cost: int = constants.GAS_ECADD) -> ComputationAPI:
 
     computation.consume_gas(gas_cost, reason='ECADD Precompile')
 

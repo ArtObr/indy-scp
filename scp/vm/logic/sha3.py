@@ -4,10 +4,10 @@ from scp import constants
 from scp._utils.numeric import (
     ceil32,
 )
-from scp.vm.computation import BaseComputation
+from scp.abc import ComputationAPI
 
 
-def sha3(computation: BaseComputation) -> None:
+def sha3(computation: ComputationAPI) -> None:
     start_position, size = computation.stack_pop_ints(2)
 
     computation.extend_memory(start_position, size)

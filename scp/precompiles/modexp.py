@@ -18,8 +18,8 @@ from scp._utils.padding import (
     zpad_left,
 )
 
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
@@ -121,7 +121,7 @@ def _modexp(data: bytes) -> int:
     return result
 
 
-def modexp(computation: BaseComputation) -> BaseComputation:
+def modexp(computation: ComputationAPI) -> ComputationAPI:
     """
     https://github.com/ethereum/EIPs/pull/198
     """

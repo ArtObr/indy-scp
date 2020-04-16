@@ -8,12 +8,12 @@ from scp._utils.numeric import (
 from scp._utils.padding import (
     pad32,
 )
-from scp.vm.computation import (
-    BaseComputation,
+from scp.abc import (
+    ComputationAPI,
 )
 
 
-def ripemd160(computation: BaseComputation) -> BaseComputation:
+def ripemd160(computation: ComputationAPI) -> ComputationAPI:
     word_count = ceil32(len(computation.msg.data)) // 32
     gas_fee = constants.GAS_RIPEMD160 + word_count * constants.GAS_RIPEMD160WORD
 
