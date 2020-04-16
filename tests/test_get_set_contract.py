@@ -5,7 +5,7 @@ from eth_utils import (
     encode_hex
 )
 
-from scp.abc import AtomicDatabaseAPI, ConsensusContextAPI
+from scp.abc import AtomicDatabaseAPI
 from scp.db.atomic import AtomicDB
 from scp.db.backends.level import LevelDB
 from scp.db.chain import ChainDB
@@ -13,10 +13,9 @@ from scp.db.chain import ChainDB
 from scp.tools.factories.transaction import (
     new_transaction
 )
-from scp.vm.chain_context import ChainContext
-from scp.vm.forks import HomesteadVM
 from scp.vm.opcode_values import CALLDATALOADFUNCTION, EQ, PUSH1, JUMPI, JUMPDEST, RETURN, SSTORE, PUSH32, PUSH4, SLOAD, \
     MSTORE
+from scp.vm.state import VMState
 
 contract_OOP_code = \
     '''
@@ -81,22 +80,16 @@ contract_code = bytes([
 call_get_value_code = bytes([*'2096'.encode()])
 
 
-class ConsensusContext(ConsensusContextAPI):
-    def __init__(self, db: AtomicDatabaseAPI):
-        self.db = db
-
-
 def test_apply_transaction():
-    # db = LevelDB(Path('/home/alice/dev/level_db'))
     db = AtomicDB()
-    vm = HomesteadVM(None, ChainDB(db), ChainContext(None), ConsensusContext(db))
+    vm = VMState(ChainDB(db))
     recipient = b''
     amount = 0
     from_ = b''
     tx = new_transaction(vm, from_, recipient, amount, b'', data=contract_code)
-    receipt, computation = vm.apply_transaction(vm.get_header(), tx)
+    computation = vm.apply_transaction(vm.get_header(), tx)
 
     recipient = b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:'
     tx = new_transaction(vm, from_, recipient, amount, b'', data=call_get_value_code)
-    receipt, computation = vm.apply_transaction(vm.get_header(), tx)
+    computation = vm.apply_transaction(vm.get_header(), tx)
     assert computation.output.decode('utf-8').lstrip('\0') == 'Hello World'

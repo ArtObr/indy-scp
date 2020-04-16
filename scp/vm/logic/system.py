@@ -4,13 +4,8 @@ from eth_typing import (
 from eth_utils import (
     encode_hex,
 )
-from scp import constants
-from scp.exceptions import (
-    Halt,
-    Revert,
-    WriteProtection,
-)
 
+from scp import constants
 from scp._utils.address import (
     force_bytes_to_address,
     generate_contract_address,
@@ -23,9 +18,13 @@ from scp.abc import (
     ComputationAPI,
     MessageAPI,
 )
+from scp.exceptions import (
+    Halt,
+    Revert,
+    WriteProtection,
+)
 from scp.vm import mnemonics
 from scp.vm.opcode import Opcode
-
 from .call import max_child_gas_eip150
 
 
@@ -65,8 +64,8 @@ def selfdestruct_eip150(computation: ComputationAPI) -> None:
 def selfdestruct_eip161(computation: ComputationAPI) -> None:
     beneficiary = force_bytes_to_address(computation.stack_pop1_bytes())
     is_dead = (
-        not computation.state.account_exists(beneficiary) or
-        computation.state.account_is_empty(beneficiary)
+            not computation.state.account_exists(beneficiary) or
+            computation.state.account_is_empty(beneficiary)
     )
     if is_dead and computation.state.get_balance(computation.msg.storage_address):
         computation.consume_gas(
@@ -106,7 +105,6 @@ class CreateOpcodeStackData:
                  memory_start: int,
                  memory_length: int,
                  salt: int = None) -> None:
-
         self.endowment = endowment
         self.memory_start = memory_start
         self.memory_length = memory_length

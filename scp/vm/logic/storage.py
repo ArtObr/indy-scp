@@ -3,8 +3,8 @@ from typing import NamedTuple
 from eth_utils import (
     encode_hex,
 )
-from scp import constants
 
+from scp import constants
 from scp.vm.computation import BaseComputation
 
 
@@ -63,7 +63,7 @@ def sload(computation: BaseComputation) -> None:
 
 
 class NetSStoreGasSchedule(NamedTuple):
-    base: int    # the gas cost when nothing changes (eg~ dirty->dirty, clean->clean, etc)
+    base: int  # the gas cost when nothing changes (eg~ dirty->dirty, clean->clean, etc)
     create: int  # a brand new value, where none previously existed, aka init or set
     update: int  # a change to a value when the value was previously unchanged, aka clean, reset
     remove_refund: int  # the refund for removing a value, aka: clear_refund

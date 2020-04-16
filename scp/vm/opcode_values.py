@@ -14,7 +14,6 @@ MULMOD = 0x09
 EXP = 0x0a
 SIGNEXTEND = 0x0b
 
-
 #
 # Comparison and Bitwise Logic
 #
@@ -33,12 +32,10 @@ SHL = 0x1b
 SHR = 0x1c
 SAR = 0x1d
 
-
 #
 # Sha3
 #
 SHA3 = 0x20
-
 
 #
 # Environment Information
@@ -75,7 +72,6 @@ NUMBER = 0x43
 DIFFICULTY = 0x44
 GASLIMIT = 0x45
 
-
 #
 # Stack, Memory, Storage and Flow Operations
 #
@@ -92,7 +88,6 @@ PC = 0x58
 MSIZE = 0x59
 GAS = 0x5a
 JUMPDEST = 0x5b
-
 
 #
 # Push Operations
@@ -130,7 +125,6 @@ PUSH30 = 0x7d
 PUSH31 = 0x7e
 PUSH32 = 0x7f
 
-
 #
 # Duplicate Operations
 #
@@ -150,7 +144,6 @@ DUP13 = 0x8c
 DUP14 = 0x8d
 DUP15 = 0x8e
 DUP16 = 0x8f
-
 
 #
 # Exchange Operations
@@ -172,7 +165,6 @@ SWAP14 = 0x9d
 SWAP15 = 0x9e
 SWAP16 = 0x9f
 
-
 #
 # Logging
 #
@@ -181,7 +173,6 @@ LOG1 = 0xa1
 LOG2 = 0xa2
 LOG3 = 0xa3
 LOG4 = 0xa4
-
 
 #
 # System

@@ -22,6 +22,7 @@ class MissingAccountTrieNode(EVMMissingData, MissingTrieNode):
     """
     Raised when a main state trie node is missing from the DB, to get an account RLP
     """
+
     @property
     def state_root_hash(self) -> Hash32:
         return self.root_hash
@@ -48,6 +49,7 @@ class MissingStorageTrieNode(EVMMissingData, MissingTrieNode):
     """
     Raised when a storage trie node is missing from the DB
     """
+
     def __init__(
             self,
             missing_node_hash: Hash32,
@@ -93,6 +95,7 @@ class MissingBytecode(EVMMissingData):
     """
     Raised when the bytecode is missing from the database for a known bytecode hash.
     """
+
     def __init__(self, missing_code_hash: Hash32) -> None:
         if not isinstance(missing_code_hash, bytes):
             raise TypeError(f"Missing code hash must be bytes, was: {missing_code_hash!r}")

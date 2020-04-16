@@ -3,18 +3,15 @@ from eth_typing import (
 )
 
 from scp import constants
-
-from scp.exceptions import (
-    OutOfBoundsRead,
-)
-
 from scp._utils.address import (
     force_bytes_to_address,
 )
 from scp._utils.numeric import (
     ceil32,
 )
-
+from scp.exceptions import (
+    OutOfBoundsRead,
+)
 from scp.vm.computation import BaseComputation
 
 
@@ -90,8 +87,8 @@ def calldatacopy(computation: BaseComputation) -> None:
     computation.consume_gas(copy_gas_cost, reason="CALLDATACOPY fee")
 
     value = computation.msg.data_as_bytes[
-        calldata_start_position: calldata_start_position + size
-    ]
+            calldata_start_position: calldata_start_position + size
+            ]
     padded_value = value.ljust(size, b'\x00')
 
     computation.memory_write(mem_start_position, size, padded_value)

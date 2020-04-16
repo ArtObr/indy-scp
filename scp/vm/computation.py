@@ -1,7 +1,3 @@
-from scp.abc import (
-    abstractmethod,
-)
-import itertools
 from types import TracebackType
 from typing import (
     Any,
@@ -14,15 +10,23 @@ from typing import (
     Union,
 )
 
+import itertools
 from cached_property import cached_property
 from eth_typing import (
     Address,
 )
 from eth_utils import (
-    encode_hex,
     get_extended_debug_logger,
 )
 
+from scp import precompiles
+from scp._utils.address import force_bytes_to_address
+from scp._utils.datatypes import (
+    Configurable,
+)
+from scp._utils.numeric import (
+    ceil32,
+)
 from scp.abc import (
     MemoryAPI,
     StackAPI,
@@ -32,24 +36,19 @@ from scp.abc import (
     CodeStreamAPI,
     ComputationAPI,
     StateAPI,
-    TransactionContextAPI,
+)
+from scp.abc import (
+    abstractmethod,
 )
 from scp.constants import (
     GAS_MEMORY,
-    GAS_MEMORY_QUADRATIC_DENOMINATOR,
+    GAS_MEMORY_QUADRATIC_DENOMINATOR, STACK_DEPTH_LIMIT,
 )
 from scp.exceptions import (
     Halt,
-    VMError,
-)
+    VMError, StackDepthLimit, )
 from scp.typing import (
     BytesOrView,
-)
-from scp._utils.datatypes import (
-    Configurable,
-)
-from scp._utils.numeric import (
-    ceil32,
 )
 from scp.validation import (
     validate_canonical_address,
@@ -58,9 +57,6 @@ from scp.validation import (
 )
 from scp.vm.code_stream import (
     CodeStream,
-)
-from scp.vm.gas_meter import (
-    GasMeter,
 )
 from scp.vm.logic.invalid import (
     InvalidOpcode,
@@ -71,9 +67,17 @@ from scp.vm.memory import (
 from scp.vm.message import (
     Message,
 )
+from scp.vm.opcodes import FRONTIER_OPCODES
 from scp.vm.stack import (
     Stack,
 )
+
+FRONTIER_PRECOMPILES = {
+    force_bytes_to_address(b'\x01'): precompiles.ecrecover,
+    force_bytes_to_address(b'\x02'): precompiles.sha256,
+    force_bytes_to_address(b'\x03'): precompiles.ripemd160,
+    force_bytes_to_address(b'\x04'): precompiles.identity,
+}
 
 
 def NO_RESULT(computation: ComputationAPI) -> None:
@@ -108,7 +112,6 @@ class BaseComputation(Configurable, ComputationAPI):
     """
     state: StateAPI = None
     msg: MessageAPI = None
-    transaction_context: TransactionContextAPI = None
 
     _memory: MemoryAPI = None
     _stack: StackAPI = None
@@ -127,23 +130,20 @@ class BaseComputation(Configurable, ComputationAPI):
     accounts_to_delete: Dict[Address, Address] = None
 
     # VM configuration
-    opcodes: Dict[int, OpcodeAPI] = None
-    _precompiles: Dict[Address, Callable[[ComputationAPI], ComputationAPI]] = None
+    opcodes: Dict[int, OpcodeAPI] = FRONTIER_OPCODES
+    _precompiles: Dict[Address, Callable[[ComputationAPI], ComputationAPI]] = FRONTIER_PRECOMPILES
 
     logger = get_extended_debug_logger('eth.vm.computation.Computation')
 
     def __init__(self,
                  state: StateAPI,
-                 message: MessageAPI,
-                 transaction_context: TransactionContextAPI) -> None:
+                 message: MessageAPI) -> None:
 
         self.state = state
         self.msg = message
-        self.transaction_context = transaction_context
 
         self._memory = Memory()
         self._stack = Stack()
-        self._gas_meter = self.get_gas_meter()
 
         self.children = []
         self.accounts_to_delete = {}
@@ -247,8 +247,6 @@ class BaseComputation(Configurable, ComputationAPI):
     #
     # Gas Consumption
     #
-    def get_gas_meter(self) -> GasMeterAPI:
-        return GasMeter(self.msg.gas)
 
     def consume_gas(self, amount: int, reason: str) -> None:
         return self._gas_meter.consume_gas(amount, reason)
@@ -517,25 +515,40 @@ class BaseComputation(Configurable, ComputationAPI):
     #
     @abstractmethod
     def apply_message(self) -> ComputationAPI:
-        raise NotImplementedError("Must be implemented by subclasses")
+        if self.msg.depth > STACK_DEPTH_LIMIT:
+            raise StackDepthLimit("Stack depth limit reached")
+
+        computation = self.apply_computation(
+            self.state,
+            self.msg,
+        )
+
+        # if computation.is_error:
+        #     self.state.revert(snapshot)
+        # else:
+        #     self.state.commit(snapshot)
+
+        return computation
 
     @abstractmethod
     def apply_create_message(self) -> ComputationAPI:
-        raise NotImplementedError("Must be implemented by subclasses")
+        # snapshot = self.state.snapshot()
+
+        computation = self.apply_message()
+
+        # if computation.is_error:
+        return computation
 
     @classmethod
     def apply_computation(cls,
                           state: StateAPI,
-                          message: MessageAPI,
-                          transaction_context: TransactionContextAPI) -> ComputationAPI:
-        with cls(state, message, transaction_context) as computation:
+                          message: MessageAPI) -> ComputationAPI:
+        with cls(state, message) as computation:
             # Early exit on pre-compiles
             precompile = computation.precompiles.get(message.code_address, NO_RESULT)
             if precompile is not NO_RESULT:
                 precompile(computation)
                 return computation
-
-            show_debug2 = computation.logger.show_debug2
 
             opcode_lookup = computation.opcodes
             for opcode in computation.code:
@@ -543,14 +556,6 @@ class BaseComputation(Configurable, ComputationAPI):
                     opcode_fn = opcode_lookup[opcode]
                 except KeyError:
                     opcode_fn = InvalidOpcode(opcode)
-
-                if show_debug2:
-                    computation.logger.debug2(
-                        "OPCODE: 0x%x (%s) | pc: %s",
-                        opcode,
-                        opcode_fn.mnemonic,
-                        max(0, computation.code.program_counter - 1),
-                    )
 
                 try:
                     opcode_fn(computation=computation)

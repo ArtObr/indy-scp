@@ -1,7 +1,6 @@
 from typing import Dict
 
 from scp import constants
-
 from scp.abc import OpcodeAPI
 from scp.vm import mnemonics
 from scp.vm import opcode_values
@@ -24,7 +23,6 @@ from scp.vm.logic import (
 from scp.vm.opcode import (
     as_opcode,
 )
-
 
 FRONTIER_OPCODES: Dict[int, OpcodeAPI] = {
     #

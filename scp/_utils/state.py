@@ -6,13 +6,13 @@ from scp.typing import (
     AccountDiff,
     AccountState,
 )
-from scp.vm.state import BaseState
+from scp.vm.state import VMState
 
 
 @to_tuple
 def diff_state(
         expected_state: AccountState,
-        state: BaseState) -> AccountDiff:
+        state: VMState) -> AccountDiff:
 
     for account, account_data in sorted(expected_state.items()):
         expected_balance = account_data['balance']

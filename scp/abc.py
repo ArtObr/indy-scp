@@ -46,7 +46,6 @@ from scp.typing import (
     VMConfiguration,
 )
 
-
 T = TypeVar('T')
 
 
@@ -112,6 +111,7 @@ class BaseTransactionAPI(ABC):
     """
     A class to define all common methods of a transaction.
     """
+
     @abstractmethod
     def validate(self) -> None:
         """
@@ -145,12 +145,12 @@ class BaseTransactionAPI(ABC):
         """
         ...
 
-    @abstractmethod
-    def copy(self: T, **overrides: Any) -> T:
-        """
-        Return a copy of the transaction.
-        """
-        ...
+    # @abstractmethod
+    # def copy(self: T, **overrides: Any) -> T:
+    #     """
+    #     Return a copy of the transaction.
+    #     """
+    #     ...
 
 
 class TransactionFieldsAPI(ABC):
@@ -200,6 +200,7 @@ class SignedTransactionAPI(rlp.Serializable, BaseTransactionAPI, TransactionFiel
     """
     A class representing a transaction that was signed with a private key.
     """
+
     @classmethod
     @abstractmethod
     def from_base_transaction(cls, transaction: 'SignedTransactionAPI') -> 'SignedTransactionAPI':
@@ -344,6 +345,7 @@ class SchemaAPI(ABC):
     """
     A class representing a database schema that maps values to lookup keys.
     """
+
     @staticmethod
     @abstractmethod
     def make_canonical_head_hash_lookup_key() -> bytes:
@@ -381,6 +383,7 @@ class DatabaseAPI(MutableMapping[bytes, bytes], ABC):
     """
     A class representing a database.
     """
+
     @abstractmethod
     def set(self, key: bytes, value: bytes) -> None:
         """
@@ -419,6 +422,7 @@ class AtomicDatabaseAPI(DatabaseAPI):
     Like ``BatchDB``, but immediately write out changes if they are
     not in an ``atomic_batch()`` context.
     """
+
     @abstractmethod
     def atomic_batch(self) -> ContextManager[AtomicWriteBatchAPI]:
         """
@@ -528,164 +532,6 @@ class HeaderDatabaseAPI(ABC):
             Providing a ``genesis_parent_hash`` allows storage of headers that aren't (yet)
             connected back to the true genesis header.
 
-        """
-        ...
-
-
-class ChainDatabaseAPI(HeaderDatabaseAPI):
-    """
-    A class representing a database for chain data. This class is derived from
-    :class:`~eth.abc.HeaderDatabaseAPI`.
-    """
-    #
-    # Header API
-    #
-    @abstractmethod
-    def get_block_uncles(self, uncles_hash: Hash32) -> Tuple[BlockHeaderAPI, ...]:
-        """
-        Return an iterable of uncle headers specified by the given ``uncles_hash``
-        """
-        ...
-
-    #
-    # Block API
-    #
-    @abstractmethod
-    def persist_block(self,
-                      block: BlockAPI,
-                      genesis_parent_hash: Hash32 = None,
-                      ) -> Tuple[Tuple[Hash32, ...], Tuple[Hash32, ...]]:
-        """
-        Persist the given block's header and uncles.
-
-        :param block: the block that gets persisted
-        :param genesis_parent_hash: *optional* parent hash of the header that is treated
-            as genesis. Providing a ``genesis_parent_hash`` allows storage of blocks that
-            aren't (yet) connected back to the true genesis header.
-
-        Assumes all block transactions have been persisted already.
-        """
-        ...
-
-    @abstractmethod
-    def persist_uncles(self, uncles: Tuple[BlockHeaderAPI]) -> Hash32:
-        """
-        Persist the list of uncles to the database.
-
-        Return the uncles hash.
-        """
-        ...
-
-    #
-    # Transaction API
-    #
-    @abstractmethod
-    def add_receipt(self,
-                    block_header: BlockHeaderAPI,
-                    index_key: int, receipt: ReceiptAPI) -> Hash32:
-        """
-        Add the given receipt to the provided block header.
-
-        Return the updated `receipts_root` for updated block header.
-        """
-        ...
-
-    @abstractmethod
-    def add_transaction(self,
-                        block_header: BlockHeaderAPI,
-                        index_key: int, transaction: SignedTransactionAPI) -> Hash32:
-        """
-        Add the given transaction to the provided block header.
-
-        Return the updated `transactions_root` for updated block header.
-        """
-        ...
-
-    @abstractmethod
-    def get_block_transactions(
-            self,
-            block_header: BlockHeaderAPI,
-            transaction_class: Type[SignedTransactionAPI]) -> Tuple[SignedTransactionAPI, ...]:
-        """
-        Return an iterable of transactions for the block speficied by the
-        given block header.
-        """
-        ...
-
-    @abstractmethod
-    def get_block_transaction_hashes(self, block_header: BlockHeaderAPI) -> Tuple[Hash32, ...]:
-        """
-        Return a tuple cointaining the hashes of the transactions of the given ``block_header``.
-        """
-        ...
-
-    @abstractmethod
-    def get_receipt_by_index(self,
-                             block_number: BlockNumber,
-                             receipt_index: int) -> ReceiptAPI:
-        """
-        Return the receipt of the transaction at specified index
-        for the block header obtained by the specified block number
-        """
-        ...
-
-    @abstractmethod
-    def get_receipts(self,
-                     header: BlockHeaderAPI,
-                     receipt_class: Type[ReceiptAPI]) -> Tuple[ReceiptAPI, ...]:
-        """
-        Return a tuple of receipts for the block specified by the given
-        block header.
-        """
-        ...
-
-    @abstractmethod
-    def get_transaction_by_index(
-            self,
-            block_number: BlockNumber,
-            transaction_index: int,
-            transaction_class: Type[SignedTransactionAPI]) -> SignedTransactionAPI:
-        """
-        Return the transaction at the specified `transaction_index` from the
-        block specified by `block_number` from the canonical chain.
-
-        Raise ``TransactionNotFound`` if no block with that ``block_number`` exists.
-        """
-        ...
-
-    @abstractmethod
-    def get_transaction_index(self, transaction_hash: Hash32) -> Tuple[BlockNumber, int]:
-        """
-        Return a 2-tuple of (block_number, transaction_index) indicating which
-        block the given transaction can be found in and at what index in the
-        block transactions.
-
-        Raise ``TransactionNotFound`` if the transaction_hash is not found in the
-        canonical chain.
-        """
-        ...
-
-    #
-    # Raw Database API
-    #
-    @abstractmethod
-    def exists(self, key: bytes) -> bool:
-        """
-        Return ``True`` if the given key exists in the database.
-        """
-        ...
-
-    @abstractmethod
-    def get(self, key: bytes) -> bytes:
-        """
-        Return the value for the given key or a KeyError if it doesn't exist in the database.
-        """
-        ...
-
-    @abstractmethod
-    def persist_trie_data_dict(self, trie_data_dict: Dict[Hash32, bytes]) -> None:
-        """
-        Store raw trie data to db from a dict
         """
         ...
 
@@ -818,6 +664,7 @@ class ChainContextAPI(ABC):
     """
     Immutable chain context information that remains constant over the VM execution.
     """
+
     @abstractmethod
     def __init__(self, chain_id: Optional[int]) -> None:
         """
@@ -834,45 +681,11 @@ class ChainContextAPI(ABC):
         ...
 
 
-class TransactionContextAPI(ABC):
-    """
-    Immutable transaction context information that remains constant over the VM execution.
-    """
-    @abstractmethod
-    def __init__(self, gas_price: int, origin: Address) -> None:
-        """
-        Initialize the transaction context from the given ``gas_price`` and ``origin`` address.
-        """
-        ...
-
-    @abstractmethod
-    def get_next_log_counter(self) -> int:
-        """
-        Increment and return the log counter.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def gas_price(self) -> int:
-        """
-        Return the gas price of the transaction context.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def origin(self) -> Address:
-        """
-        Return the origin of the transaction context.
-        """
-        ...
-
-
 class MemoryAPI(ABC):
     """
     A class representing the memory of the :class:`~eth.abc.VirtualMachineAPI`.
     """
+
     @abstractmethod
     def extend(self, start_position: int, size: int) -> None:
         """
@@ -913,6 +726,7 @@ class StackAPI(ABC):
     """
     A class representing the stack of the :class:`~eth.abc.VirtualMachineAPI`.
     """
+
     @abstractmethod
     def push_int(self, value: int) -> None:
         """
@@ -1126,67 +940,6 @@ class StackManipulationAPI(ABC):
         ...
 
 
-class ExecutionContextAPI(ABC):
-    """
-    A class representing context information that remains constant over the execution of a block.
-    """
-    @property
-    @abstractmethod
-    def coinbase(self) -> Address:
-        """
-        Return the coinbase address of the block.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def timestamp(self) -> int:
-        """
-        Return the timestamp of the block.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def block_number(self) -> BlockNumber:
-        """
-        Return the number of the block.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def difficulty(self) -> int:
-        """
-        Return the difficulty of the block.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def gas_limit(self) -> int:
-        """
-        Return the gas limit of the block.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def prev_hashes(self) -> Iterable[Hash32]:
-        """
-        Return an iterable of block hashes that precede the block.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def chain_id(self) -> int:
-        """
-        Return the id of the chain.
-        """
-        ...
-
-
 class ComputationAPI(ContextManager['ComputationAPI'], StackManipulationAPI):
     """
     The base class for all execution computations.
@@ -1201,8 +954,7 @@ class ComputationAPI(ContextManager['ComputationAPI'], StackManipulationAPI):
     @abstractmethod
     def __init__(self,
                  state: 'StateAPI',
-                 message: MessageAPI,
-                 transaction_context: TransactionContextAPI) -> None:
+                 message: MessageAPI) -> None:
         """
         Instantiate the computation.
         """
@@ -1516,8 +1268,7 @@ class ComputationAPI(ContextManager['ComputationAPI'], StackManipulationAPI):
     @abstractmethod
     def apply_computation(cls,
                           state: 'StateAPI',
-                          message: MessageAPI,
-                          transaction_context: TransactionContextAPI) -> 'ComputationAPI':
+                          message: MessageAPI) -> 'ComputationAPI':
         """
         Perform the computation that would be triggered by the VM message.
         """
@@ -1543,313 +1294,11 @@ class ComputationAPI(ContextManager['ComputationAPI'], StackManipulationAPI):
         ...
 
 
-class AccountStorageDatabaseAPI(ABC):
-    """
-    Storage cache and write batch for a single account. Changes are not
-    merklized until :meth:`make_storage_root` is called.
-    """
-    @abstractmethod
-    def get(self, slot: int, from_journal: bool=True) -> int:
-        """
-        Return the value at ``slot``. Lookups take the journal into consideration unless
-        ``from_journal`` is explicitly set to ``False``.
-        """
-        ...
-
-    @abstractmethod
-    def set(self, slot: int, value: int) -> None:
-        """
-        Write ``value`` into ``slot``.
-        """
-        ...
-
-    @abstractmethod
-    def delete(self) -> None:
-        """
-        Delete the entire storage at the account.
-        """
-        ...
-
-    @abstractmethod
-    def record(self, checkpoint: JournalDBCheckpoint) -> None:
-        """
-        Record changes into the given ``checkpoint``.
-        """
-        ...
-
-    @abstractmethod
-    def discard(self, checkpoint: JournalDBCheckpoint) -> None:
-        """
-        Discard the given ``checkpoint``.
-        """
-        ...
-
-    @abstractmethod
-    def commit(self, checkpoint: JournalDBCheckpoint) -> None:
-        """
-        Collapse changes into the given ``checkpoint``.
-        """
-        ...
-
-    @abstractmethod
-    def lock_changes(self) -> None:
-        """
-        Locks in changes to storage, typically just as a transaction starts.
-
-        This is used, for example, to look up the storage value from the start
-        of the transaction, when calculating gas costs in EIP-2200: net gas metering.
-        """
-        ...
-
-    @abstractmethod
-    def make_storage_root(self) -> None:
-        """
-        Force calculation of the storage root for this account
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def has_changed_root(self) -> bool:
-        """
-        Return ``True`` if the storage root has changed.
-        """
-        ...
-
-    @abstractmethod
-    def get_changed_root(self) -> Hash32:
-        """
-        Return the changed root hash.
-        Raise ``ValidationError`` if the root has not changed.
-        """
-        ...
-
-    @abstractmethod
-    def persist(self, db: DatabaseAPI) -> None:
-        """
-        Persist all changes to the database.
-        """
-        ...
-
-
-class AccountDatabaseAPI(ABC):
-    """
-    A class representing a database for accounts.
-    """
-    @abstractmethod
-    def __init__(self, db: AtomicDatabaseAPI, state_root: Hash32 = BLANK_ROOT_HASH) -> None:
-        """
-        Initialize the account database.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def state_root(self) -> Hash32:
-        """
-        Return the state root hash.
-        """
-        ...
-
-    @abstractmethod
-    def has_root(self, state_root: bytes) -> bool:
-        """
-        Return ``True`` if the `state_root` exists, otherwise ``False``.
-        """
-        ...
-
-    #
-    # Storage
-    #
-    @abstractmethod
-    def get_storage(self, address: Address, slot: int, from_journal: bool=True) -> int:
-        """
-        Return the value stored at ``slot`` for the given ``address``. Take the journal
-        into consideration unless ``from_journal`` is set to ``False``.
-        """
-        ...
-
-    @abstractmethod
-    def set_storage(self, address: Address, slot: int, value: int) -> None:
-        """
-        Write ``value`` into ``slot`` for the given ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def delete_storage(self, address: Address) -> None:
-        """
-        Delete the storage at ``address``.
-        """
-        ...
-
-    #
-    # Balance
-    #
-    @abstractmethod
-    def get_balance(self, address: Address) -> int:
-        """
-        Return the balance at ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def set_balance(self, address: Address, balance: int) -> None:
-        """
-        Set ``balance`` as the new balance for ``address``.
-        """
-        ...
-
-    #
-    # Nonce
-    #
-    @abstractmethod
-    def get_nonce(self, address: Address) -> int:
-        """
-        Return the nonce for ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def set_nonce(self, address: Address, nonce: int) -> None:
-        """
-        Set ``nonce`` as the new nonce for ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def increment_nonce(self, address: Address) -> None:
-        """
-        Increment the nonce for ``address``.
-        """
-        ...
-
-    #
-    # Code
-    #
-    @abstractmethod
-    def set_code(self, address: Address, code: bytes) -> None:
-        """
-        Set ``code`` as the new code at ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def get_code(self, address: Address) -> bytes:
-        """
-        Return the code at the given ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def get_code_hash(self, address: Address) -> Hash32:
-        """
-        Return the hash of the code at ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def delete_code(self, address: Address) -> None:
-        """
-        Delete the code at ``address``.
-        """
-        ...
-
-    #
-    # Account Methods
-    #
-    @abstractmethod
-    def account_has_code_or_nonce(self, address: Address) -> bool:
-        """
-        Return ``True`` if either code or a nonce exists at ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def delete_account(self, address: Address) -> None:
-        """
-        Delete the account at ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def account_exists(self, address: Address) -> bool:
-        """
-        Return ``True`` if an account exists at ``address``, otherwise ``False``.
-        """
-        ...
-
-    @abstractmethod
-    def touch_account(self, address: Address) -> None:
-        """
-        Touch the account at ``address``.
-        """
-        ...
-
-    @abstractmethod
-    def account_is_empty(self, address: Address) -> bool:
-        """
-        Return ``True`` if an account exists at ``address``.
-        """
-        ...
-
-    #
-    # Record and discard API
-    #
-    @abstractmethod
-    def record(self) -> JournalDBCheckpoint:
-        """
-        Create and return a new checkpoint.
-        """
-        ...
-
-    @abstractmethod
-    def discard(self, checkpoint: JournalDBCheckpoint) -> None:
-        """
-        Discard the given ``checkpoint``.
-        """
-        ...
-
-    @abstractmethod
-    def commit(self, checkpoint: JournalDBCheckpoint) -> None:
-        """
-        Collapse changes into ``checkpoint``.
-        """
-        ...
-
-    @abstractmethod
-    def make_state_root(self) -> Hash32:
-        """
-        Generate the state root with all the current changes in AccountDB
-
-        Current changes include every pending change to storage, as well as all account changes.
-        After generating all the required tries, the final account state root is returned.
-
-        This is an expensive operation, so should be called as little as possible. For example,
-        pre-Byzantium, this is called after every transaction, because we need the state root
-        in each receipt. Byzantium+, we only need state roots at the end of the block,
-        so we *only* call it right before persistance.
-
-        :return: the new state root
-        """
-        ...
-
-    @abstractmethod
-    def persist(self) -> None:
-        """
-        Send changes to underlying database, including the trie state
-        so that it will forever be possible to read the trie from this checkpoint.
-
-        :meth:`make_state_root` must be explicitly called before this method.
-        Otherwise persist will raise a ValidationError.
-        """
-        ...
-
-
 class TransactionExecutorAPI(ABC):
     """
     A class providing APIs to execute transactions on VM state.
     """
+
     @abstractmethod
     def __init__(self, vm_state: 'StateAPI') -> None:
         """
@@ -1904,10 +1353,11 @@ class ConfigurableAPI(ABC):
     """
     A class providing inline subclassing.
     """
+
     @classmethod
     @abstractmethod
     def configure(cls: Type[T],
-                  __name__: str=None,
+                  __name__: str = None,
                   **overrides: Any) -> Type[T]:
         ...
 
@@ -1931,29 +1381,16 @@ class StateAPI(ConfigurableAPI):
     #
     # Set from __init__
     #
-    execution_context: ExecutionContextAPI
 
     computation_class: Type[ComputationAPI]
-    transaction_context_class: Type[TransactionContextAPI]
-    account_db_class: Type[AccountDatabaseAPI]
     transaction_executor_class: Type[TransactionExecutorAPI] = None
 
     @abstractmethod
     def __init__(
             self,
-            db: AtomicDatabaseAPI,
-            execution_context: ExecutionContextAPI,
-            state_root: bytes) -> None:
+            db: AtomicDatabaseAPI) -> None:
         """
         Initialize the state.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def logger(self) -> ExtendedDebugLogger:
-        """
-        Return the logger.
         """
         ...
 
@@ -2000,35 +1437,8 @@ class StateAPI(ConfigurableAPI):
         """
         ...
 
-    #
-    # Access to account db
-    #
-    @classmethod
     @abstractmethod
-    def get_account_db_class(cls) -> Type[AccountDatabaseAPI]:
-        """
-        Return the :class:`~eth.abc.AccountDatabaseAPI` class that the
-        state class uses.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def state_root(self) -> Hash32:
-        """
-        Return the current ``state_root`` from the underlying database
-        """
-        ...
-
-    @abstractmethod
-    def make_state_root(self) -> Hash32:
-        """
-        Create and return the state root.
-        """
-        ...
-
-    @abstractmethod
-    def get_storage(self, address: Address, slot: int, from_journal: bool=True) -> int:
+    def get_storage(self, address: Address, slot: int, from_journal: bool = True) -> int:
         """
         Return the storage at ``slot`` for ``address``.
         """
@@ -2215,22 +1625,9 @@ class StateAPI(ConfigurableAPI):
     #
     @abstractmethod
     def get_computation(self,
-                        message: MessageAPI,
-                        transaction_context: TransactionContextAPI) -> ComputationAPI:
+                        message: MessageAPI) -> ComputationAPI:
         """
         Return a computation instance for the given `message` and `transaction_context`
-        """
-        ...
-
-    #
-    # Transaction context
-    #
-    @classmethod
-    @abstractmethod
-    def get_transaction_context_class(cls) -> Type[TransactionContextAPI]:
-        """
-        Return the :class:`~eth.vm.transaction_context.BaseTransactionContext` class that the
-        state class uses.
         """
         ...
 
@@ -2255,87 +1652,9 @@ class StateAPI(ConfigurableAPI):
         ...
 
     @abstractmethod
-    def costless_execute_transaction(self,
-                                     transaction: SignedTransactionAPI) -> ComputationAPI:
-        """
-        Execute the given ``transaction`` with a gas price of ``0``.
-        """
-        ...
-
-    @abstractmethod
-    def override_transaction_context(self, gas_price: int) -> ContextManager[None]:
-        """
-        Return a :class:`~typing.ContextManager` that overwrites the current transaction context,
-        applying the given ``gas_price``.
-        """
-        ...
-
-    @abstractmethod
     def validate_transaction(self, transaction: SignedTransactionAPI) -> None:
         """
         Validate the given ``transaction``.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_transaction_context(cls,
-                                transaction: SignedTransactionAPI) -> TransactionContextAPI:
-        """
-        Return the :class:`~eth.abc.TransactionContextAPI` for the given ``transaction``
-        """
-        ...
-
-
-class ConsensusContextAPI(ABC):
-    """
-    A class representing a data context for the :class:`~eth.abc.ConsensusAPI` which is
-    instantiated once per chain instance and stays in memory across VM runs.
-    """
-
-    @abstractmethod
-    def __init__(self, db: AtomicDatabaseAPI) -> None:
-        """
-        Initialize the context with a database.
-        """
-        ...
-
-
-class ConsensusAPI(ABC):
-    """
-    A class encapsulating the consensus scheme to allow chains to run under different kind of
-    EVM-compatible consensus mechanisms such as the Clique Proof of Authority scheme.
-    """
-
-    @abstractmethod
-    def __init__(self, context: ConsensusContextAPI) -> None:
-        """
-        Initialize the consensus api.
-        """
-        ...
-
-    @abstractmethod
-    def validate_seal(self, header: BlockHeaderAPI) -> None:
-        """
-        Validate the seal on the given header, even if its parent is missing.
-        """
-        ...
-
-    @abstractmethod
-    def validate_seal_extension(self,
-                                header: BlockHeaderAPI,
-                                parents: Iterable[BlockHeaderAPI]) -> None:
-        """
-        Validate the seal on the given header when all parents must be present. Parent headers
-        that are not yet in the database must be passed as ``parents``.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_fee_recipient(cls, header: BlockHeaderAPI) -> Address:
-        """
-        Return the address that should receive rewards for creating the block.
         """
         ...
 
@@ -2354,16 +1673,10 @@ class VirtualMachineAPI(ConfigurableAPI):
     """
 
     fork: str  # noqa: E701  # flake8 bug that's fixed in 3.6.0+
-    chaindb: ChainDatabaseAPI
     extra_data_max_bytes: ClassVar[int]
-    consensus_class: Type[ConsensusAPI]
-    consensus_context: ConsensusContextAPI
 
     @abstractmethod
-    def __init__(self,
-                 header: BlockHeaderAPI,
-                 chaindb: ChainDatabaseAPI,
-                 consensus_context: ConsensusContextAPI) -> None:
+    def __init__(self) -> None:
         """
         Initialize the virtual machine.
         """
@@ -2377,9 +1690,8 @@ class VirtualMachineAPI(ConfigurableAPI):
         """
         ...
 
-    @classmethod
     @abstractmethod
-    def build_state(cls,
+    def build_state(self,
                     db: AtomicDatabaseAPI,
                     header: BlockHeaderAPI,
                     chain_context: ChainContextAPI,
@@ -2393,20 +1705,6 @@ class VirtualMachineAPI(ConfigurableAPI):
         """
         ...
 
-    @abstractmethod
-    def get_header(self) -> BlockHeaderAPI:
-        """
-        Return the current header.
-        """
-        ...
-
-    @abstractmethod
-    def get_block(self) -> BlockAPI:
-        """
-        Return the current block.
-        """
-        ...
-
     #
     # Execution
     #
@@ -2414,24 +1712,13 @@ class VirtualMachineAPI(ConfigurableAPI):
     def apply_transaction(self,
                           header: BlockHeaderAPI,
                           transaction: SignedTransactionAPI
-                          ) -> Tuple[ReceiptAPI, ComputationAPI]:
+                          ) -> ComputationAPI:
         """
         Apply the transaction to the current block. This is a wrapper around
         :func:`~eth.vm.state.State.apply_transaction` with some extra orchestration logic.
 
         :param header: header of the block before application
         :param transaction: to apply
-        """
-        ...
-
-    @staticmethod
-    @abstractmethod
-    def create_execution_context(header: BlockHeaderAPI,
-                                 prev_hashes: Iterable[Hash32],
-                                 chain_context: ChainContextAPI) -> ExecutionContextAPI:
-        """
-        Create and return the :class:`~eth.abc.ExecutionContextAPI`` for the given ``header``,
-        iterable of block hashes that precede the block and the ``chain_context``.
         """
         ...
 
@@ -2454,9 +1741,9 @@ class VirtualMachineAPI(ConfigurableAPI):
 
     @abstractmethod
     def apply_all_transactions(
-        self,
-        transactions: Sequence[SignedTransactionAPI],
-        base_header: BlockHeaderAPI
+            self,
+            transactions: Sequence[SignedTransactionAPI],
+            base_header: BlockHeaderAPI
     ) -> Tuple[BlockHeaderAPI, Tuple[ReceiptAPI, ...], Tuple[ComputationAPI, ...]]:
         """
         Determine the results of applying all transactions to the base header.
@@ -2465,850 +1752,5 @@ class VirtualMachineAPI(ConfigurableAPI):
         :param transactions: an iterable of all transactions to apply
         :param base_header: the starting header to apply transactions to
         :return: the final header, the receipts of each transaction, and the computations
-        """
-        ...
-
-    @abstractmethod
-    def make_receipt(self,
-                     base_header: BlockHeaderAPI,
-                     transaction: SignedTransactionAPI,
-                     computation: ComputationAPI,
-                     state: StateAPI) -> ReceiptAPI:
-        """
-        Generate the receipt resulting from applying the transaction.
-
-        :param base_header: the header of the block before the transaction was applied.
-        :param transaction: the transaction used to generate the receipt
-        :param computation: the result of running the transaction computation
-        :param state: the resulting state, after executing the computation
-
-        :return: receipt
-        """
-        ...
-
-    #
-    # Mining
-    #
-    @abstractmethod
-    def import_block(self, block: BlockAPI) -> BlockAPI:
-        """
-        Import the given block to the chain.
-        """
-        ...
-
-    @abstractmethod
-    def mine_block(self, *args: Any, **kwargs: Any) -> BlockAPI:
-        """
-        Mine the current block. Proxies to self.pack_block method.
-        """
-        ...
-
-    @abstractmethod
-    def set_block_transactions(self,
-                               base_block: BlockAPI,
-                               new_header: BlockHeaderAPI,
-                               transactions: Sequence[SignedTransactionAPI],
-                               receipts: Sequence[ReceiptAPI]) -> BlockAPI:
-        """
-        Create a new block with the given ``transactions``.
-        """
-        ...
-
-    #
-    # Finalization
-    #
-    @abstractmethod
-    def finalize_block(self, block: BlockAPI) -> BlockAPI:
-        """
-        Perform any finalization steps like awarding the block mining reward,
-        and persisting the final state root.
-        """
-        ...
-
-    @abstractmethod
-    def pack_block(self, block: BlockAPI, *args: Any, **kwargs: Any) -> BlockAPI:
-        """
-        Pack block for mining.
-
-        :param bytes coinbase: 20-byte public address to receive block reward
-        :param bytes uncles_hash: 32 bytes
-        :param bytes state_root: 32 bytes
-        :param bytes transaction_root: 32 bytes
-        :param bytes receipt_root: 32 bytes
-        :param int bloom:
-        :param int gas_used:
-        :param bytes extra_data: 32 bytes
-        :param bytes mix_hash: 32 bytes
-        :param bytes nonce: 8 bytes
-        """
-        ...
-
-    #
-    # Headers
-    #
-    @abstractmethod
-    def add_receipt_to_header(self,
-                              old_header: BlockHeaderAPI,
-                              receipt: ReceiptAPI) -> BlockHeaderAPI:
-        """
-        Apply the receipt to the old header, and return the resulting header. This may have
-        storage-related side-effects. For example, pre-Byzantium, the state root hash
-        is included in the receipt, and so must be stored into the database.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def compute_difficulty(cls, parent_header: BlockHeaderAPI, timestamp: int) -> int:
-        """
-        Compute the difficulty for a block header.
-
-        :param parent_header: the parent header
-        :param timestamp: the timestamp of the child header
-        """
-        ...
-
-    @abstractmethod
-    def configure_header(self, **header_params: Any) -> BlockHeaderAPI:
-        """
-        Setup the current header with the provided parameters.  This can be
-        used to set fields like the gas limit or timestamp to value different
-        than their computed defaults.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def create_header_from_parent(cls,
-                                  parent_header: BlockHeaderAPI,
-                                  **header_params: Any) -> BlockHeaderAPI:
-        """
-        Creates and initializes a new block header from the provided
-        `parent_header`.
-        """
-        ...
-
-    #
-    # Blocks
-    #
-    @classmethod
-    @abstractmethod
-    def generate_block_from_parent_header_and_coinbase(cls,
-                                                       parent_header: BlockHeaderAPI,
-                                                       coinbase: Address) -> BlockAPI:
-        """
-        Generate block from parent header and coinbase.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_block_class(cls) -> Type[BlockAPI]:
-        """
-        Return the :class:`~eth.rlp.blocks.Block` class that this VM uses for blocks.
-        """
-        ...
-
-    @staticmethod
-    @abstractmethod
-    def get_block_reward() -> int:
-        """
-        Return the amount in **wei** that should be given to a miner as a reward
-        for this block.
-
-          .. note::
-            This is an abstract method that must be implemented in subclasses
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_nephew_reward(cls) -> int:
-        """
-        Return the reward which should be given to the miner of the given `nephew`.
-
-          .. note::
-            This is an abstract method that must be implemented in subclasses
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_prev_hashes(cls,
-                        last_block_hash: Hash32,
-                        chaindb: ChainDatabaseAPI) -> Optional[Iterable[Hash32]]:
-        """
-        Return an iterable of block hashes that precede the block with the given
-        ``last_block_hash``.
-        """
-        ...
-
-    @property
-    @abstractmethod
-    def previous_hashes(self) -> Optional[Iterable[Hash32]]:
-        """
-        Convenience API for accessing the previous 255 block hashes.
-        """
-        ...
-
-    @staticmethod
-    @abstractmethod
-    def get_uncle_reward(block_number: BlockNumber, uncle: BlockAPI) -> int:
-        """
-        Return the reward which should be given to the miner of the given `uncle`.
-
-          .. note::
-            This is an abstract method that must be implemented in subclasses
-        """
-        ...
-
-    #
-    # Transactions
-    #
-    @abstractmethod
-    def create_transaction(self, *args: Any, **kwargs: Any) -> SignedTransactionAPI:
-        """
-        Proxy for instantiating a signed transaction for this VM.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def create_unsigned_transaction(cls,
-                                    *,
-                                    nonce: int,
-                                    gas_price: int,
-                                    gas: int,
-                                    to: Address,
-                                    value: int,
-                                    data: bytes) -> UnsignedTransactionAPI:
-        """
-        Proxy for instantiating an unsigned transaction for this VM.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def get_transaction_class(cls) -> Type[SignedTransactionAPI]:
-        """
-        Return the class that this VM uses for transactions.
-        """
-        ...
-
-    #
-    # Validate
-    #
-    @classmethod
-    @abstractmethod
-    def validate_receipt(self, receipt: ReceiptAPI) -> None:
-        """
-        Validate the given ``receipt``.
-        """
-        ...
-
-    @abstractmethod
-    def validate_block(self, block: BlockAPI) -> None:
-        """
-        Validate the the given block.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def validate_header(self,
-                        header: BlockHeaderAPI,
-                        parent_header: BlockHeaderAPI) -> None:
-        """
-        :raise eth.exceptions.ValidationError: if the header is not valid
-        """
-        ...
-
-    @abstractmethod
-    def validate_transaction_against_header(self,
-                                            base_header: BlockHeaderAPI,
-                                            transaction: SignedTransactionAPI) -> None:
-        """
-        Validate that the given transaction is valid to apply to the given header.
-
-        :param base_header: header before applying the transaction
-        :param transaction: the transaction to validate
-
-        :raises: ValidationError if the transaction is not valid to apply
-        """
-        ...
-
-    @abstractmethod
-    def validate_seal(self, header: BlockHeaderAPI) -> None:
-        """
-        Validate the seal on the given header.
-        """
-        ...
-
-    @abstractmethod
-    def validate_seal_extension(self,
-                                header: BlockHeaderAPI,
-                                parents: Iterable[BlockHeaderAPI]) -> None:
-        """
-        Validate the seal on the given header when all parents must be present. Parent headers
-        that are not yet in the database must be passed as ``parents``.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def validate_uncle(cls,
-                       block: BlockAPI,
-                       uncle: BlockHeaderAPI,
-                       uncle_parent: BlockHeaderAPI
-                       ) -> None:
-        """
-        Validate the given uncle in the context of the given block.
-        """
-        ...
-
-    #
-    # State
-    #
-    @classmethod
-    @abstractmethod
-    def get_state_class(cls) -> Type[StateAPI]:
-        """
-        Return the class that this VM uses for states.
-        """
-        ...
-
-    @abstractmethod
-    def state_in_temp_block(self) -> ContextManager[StateAPI]:
-        """
-        Return a :class:`~typing.ContextManager` with the current state wrapped in a temporary
-        block.
-        """
-        ...
-
-
-class VirtualMachineModifierAPI(ABC):
-    """
-    Amend a set of VMs for a chain. This allows modifying a chain for different consensus schemes.
-    """
-
-    @abstractmethod
-    def amend_vm_configuration(self, vm_config: VMConfiguration) -> VMConfiguration:
-        """
-        Amend the ``vm_config`` by configuring the VM classes, and hence returning a modified
-        set of VM classes.
-        """
-        ...
-
-
-class HeaderChainAPI(ABC):
-    """
-    Like :class:`eth.abc.ChainAPI` but does only support headers, not entire blocks.
-    """
-    header: BlockHeaderAPI
-    chain_id: int
-    vm_configuration: Tuple[Tuple[BlockNumber, Type[VirtualMachineAPI]], ...]
-
-    @abstractmethod
-    def __init__(self, base_db: AtomicDatabaseAPI, header: BlockHeaderAPI = None) -> None:
-        """
-        Initialize the header chain.
-        """
-        ...
-
-    #
-    # Chain Initialization API
-    #
-    @classmethod
-    @abstractmethod
-    def from_genesis_header(cls,
-                            base_db: AtomicDatabaseAPI,
-                            genesis_header: BlockHeaderAPI) -> 'HeaderChainAPI':
-        """
-        Initialize the chain from the genesis header.
-        """
-        ...
-
-    #
-    # Helpers
-    #
-    @classmethod
-    @abstractmethod
-    def get_headerdb_class(cls) -> Type[HeaderDatabaseAPI]:
-        """
-        Return the class which should be used for the `headerdb`
-        """
-        ...
-
-    #
-    # Canonical Chain API
-    #
-    def get_canonical_block_hash(self, block_number: BlockNumber) -> Hash32:
-        """
-        Direct passthrough to `headerdb`
-        """
-
-    @abstractmethod
-    def get_canonical_block_header_by_number(self, block_number: BlockNumber) -> BlockHeaderAPI:
-        """
-        Direct passthrough to `headerdb`
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_head(self) -> BlockHeaderAPI:
-        """
-        Direct passthrough to `headerdb`
-        """
-        ...
-
-    #
-    # Header API
-    #
-    @abstractmethod
-    def get_block_header_by_hash(self, block_hash: Hash32) -> BlockHeaderAPI:
-        """
-        Direct passthrough to `headerdb`
-        """
-        ...
-
-    @abstractmethod
-    def header_exists(self, block_hash: Hash32) -> bool:
-        """
-        Direct passthrough to `headerdb`
-        """
-        ...
-
-    @abstractmethod
-    def import_header(self,
-                      header: BlockHeaderAPI,
-                      ) -> Tuple[Tuple[BlockHeaderAPI, ...], Tuple[BlockHeaderAPI, ...]]:
-        """
-        Direct passthrough to `headerdb`
-
-        Also updates the local `header` property to be the latest canonical head.
-
-        Returns an iterable of headers representing the headers that are newly
-        part of the canonical chain.
-
-        - If the imported header is not part of the canonical chain then an
-          empty tuple will be returned.
-        - If the imported header simply extends the canonical chain then a
-          length-1 tuple with the imported header will be returned.
-        - If the header is part of a non-canonical chain which overtakes the
-          current canonical chain then the returned tuple will contain the
-          headers which are newly part of the canonical chain.
-        """
-        ...
-
-
-class ChainAPI(ConfigurableAPI):
-    """
-    A Chain is a combination of one or more VM classes. Each VM is associated
-    with a range of blocks. The Chain class acts as a wrapper around these other
-    VM classes, delegating operations to the appropriate VM depending on the
-    current block number.
-    """
-    vm_configuration: Tuple[Tuple[BlockNumber, Type[VirtualMachineAPI]], ...]
-    chain_id: int
-    chaindb: ChainDatabaseAPI
-    consensus_context_class: Type[ConsensusContextAPI]
-
-    #
-    # Helpers
-    #
-    @classmethod
-    @abstractmethod
-    def get_chaindb_class(cls) -> Type[ChainDatabaseAPI]:
-        """
-        Return the class for the used :class:`~eth.abc.ChainDatabaseAPI`.
-        """
-        ...
-
-    #
-    # Chain API
-    #
-    @classmethod
-    @abstractmethod
-    def from_genesis(cls,
-                     base_db: AtomicDatabaseAPI,
-                     genesis_params: Dict[str, HeaderParams],
-                     genesis_state: AccountState=None) -> 'ChainAPI':
-        """
-        Initialize the Chain from a genesis state.
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def from_genesis_header(cls,
-                            base_db: AtomicDatabaseAPI,
-                            genesis_header: BlockHeaderAPI) -> 'ChainAPI':
-        """
-        Initialize the chain from the genesis header.
-        """
-        ...
-
-    #
-    # VM API
-    #
-    @classmethod
-    @abstractmethod
-    def get_vm_class(cls, header: BlockHeaderAPI) -> Type[VirtualMachineAPI]:
-        """
-        Return the VM class for the given ``header``
-        """
-        ...
-
-    @abstractmethod
-    def get_vm(self, header: BlockHeaderAPI = None) -> VirtualMachineAPI:
-        """
-        Return the VM instance for the given ``header``.
-        """
-        ...
-
-    @classmethod
-    def get_vm_class_for_block_number(cls, block_number: BlockNumber) -> Type[VirtualMachineAPI]:
-        """
-        Return the VM class for the given ``block_number``
-        """
-        ...
-
-    #
-    # Header API
-    #
-    @abstractmethod
-    def create_header_from_parent(self,
-                                  parent_header: BlockHeaderAPI,
-                                  **header_params: HeaderParams) -> BlockHeaderAPI:
-        """
-        Passthrough helper to the VM class of the block descending from the
-        given header.
-        """
-        ...
-
-    @abstractmethod
-    def get_block_header_by_hash(self, block_hash: Hash32) -> BlockHeaderAPI:
-        """
-        Return the requested block header as specified by ``block_hash``.
-        Raise ``BlockNotFound`` if no block header with the given hash exists in the db.
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_block_header_by_number(self, block_number: BlockNumber) -> BlockHeaderAPI:
-        """
-        Return the block header with the given number in the canonical chain.
-
-        Raise ``HeaderNotFound`` if there's no block header with the given number in the
-        canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_head(self) -> BlockHeaderAPI:
-        """
-        Return the block header at the canonical chain head.
-
-        Raise ``CanonicalHeadNotFound`` if there's no head defined for the canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_score(self, block_hash: Hash32) -> int:
-        """
-        Return the difficulty score of the block with the given ``block_hash``.
-
-        Raise ``HeaderNotFound`` if there is no matching block hash.
-        """
-        ...
-
-    #
-    # Block API
-    #
-    @abstractmethod
-    def get_ancestors(self, limit: int, header: BlockHeaderAPI) -> Tuple[BlockAPI, ...]:
-        """
-        Return `limit` number of ancestor blocks from the current canonical head.
-        """
-        ...
-
-    @abstractmethod
-    def get_block(self) -> BlockAPI:
-        """
-        Return the current block at the tip of the chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_block_by_hash(self, block_hash: Hash32) -> BlockAPI:
-        """
-        Return the requested block as specified by ``block_hash``.
-        """
-        ...
-
-    @abstractmethod
-    def get_block_by_header(self, block_header: BlockHeaderAPI) -> BlockAPI:
-        """
-        Return the requested block as specified by the ``block_header``.
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_block_by_number(self, block_number: BlockNumber) -> BlockAPI:
-        """
-        Return the block with the given ``block_number`` in the canonical chain.
-
-        Raise ``BlockNotFound`` if no block with the given ``block_number`` exists in the
-        canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_block_hash(self, block_number: BlockNumber) -> Hash32:
-        """
-        Return the block hash with the given ``block_number`` in the canonical chain.
-
-        Raise ``BlockNotFound`` if there's no block with the given number in the
-        canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def build_block_with_transactions(
-            self,
-            transactions: Tuple[SignedTransactionAPI, ...],
-            parent_header: BlockHeaderAPI = None
-    ) -> Tuple[BlockAPI, Tuple[ReceiptAPI, ...], Tuple[ComputationAPI, ...]]:
-        """
-        Generate a block with the provided transactions. This does *not* import
-        that block into your chain. If you want this new block in your chain,
-        run :meth:`~import_block` with the result block from this method.
-
-        :param transactions: an iterable of transactions to insert to the block
-        :param parent_header: parent of the new block -- or canonical head if ``None``
-        :return: (new block, receipts, computations)
-        """
-        ...
-
-    #
-    # Transaction API
-    #
-    @abstractmethod
-    def create_transaction(self, *args: Any, **kwargs: Any) -> SignedTransactionAPI:
-        """
-        Passthrough helper to the current VM class.
-        """
-        ...
-
-    @abstractmethod
-    def create_unsigned_transaction(cls,
-                                    *,
-                                    nonce: int,
-                                    gas_price: int,
-                                    gas: int,
-                                    to: Address,
-                                    value: int,
-                                    data: bytes) -> UnsignedTransactionAPI:
-        """
-        Passthrough helper to the current VM class.
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_transaction_index(self, transaction_hash: Hash32) -> Tuple[BlockNumber, int]:
-        """
-        Return a 2-tuple of (block_number, transaction_index) indicating which
-        block the given transaction can be found in and at what index in the
-        block transactions.
-
-        Raise ``TransactionNotFound`` if the transaction does not exist in the canoncial
-        chain.
-        """
-
-    @abstractmethod
-    def get_canonical_transaction(self, transaction_hash: Hash32) -> SignedTransactionAPI:
-        """
-        Return the requested transaction as specified by the ``transaction_hash``
-        from the canonical chain.
-
-        Raise ``TransactionNotFound`` if no transaction with the specified hash is
-        found in the canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_canonical_transaction_by_index(self,
-                                           block_number: BlockNumber,
-                                           index: int) -> SignedTransactionAPI:
-        """
-        Return the requested transaction as specified by the ``block_number``
-        and ``index`` from the canonical chain.
-
-        Raise ``TransactionNotFound`` if no transaction exists at ``index`` at ``block_number`` in
-        the canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_transaction_receipt(self, transaction_hash: Hash32) -> ReceiptAPI:
-        """
-        Return the requested receipt for the transaction as specified by the ``transaction_hash``.
-
-        Raise ``ReceiptNotFound`` if not receipt for the specified ``transaction_hash`` is found
-        in the canonical chain.
-        """
-        ...
-
-    @abstractmethod
-    def get_transaction_receipt_by_index(self, block_number: BlockNumber, index: int) -> ReceiptAPI:
-        """
-        Return the requested receipt for the transaction as specified by the ``block_number``
-        and ``index``.
-
-        Raise ``ReceiptNotFound`` if not receipt for the specified ``block_number`` and ``index`` is
-        found in the canonical chain.
-        """
-        ...
-
-    #
-    # Execution API
-    #
-    @abstractmethod
-    def get_transaction_result(
-            self,
-            transaction: SignedTransactionAPI,
-            at_header: BlockHeaderAPI) -> bytes:
-        """
-        Return the result of running the given transaction.
-        This is referred to as a `call()` in web3.
-        """
-        ...
-
-    @abstractmethod
-    def estimate_gas(
-            self,
-            transaction: SignedTransactionAPI,
-            at_header: BlockHeaderAPI = None) -> int:
-        """
-        Return an estimation of the amount of gas the given ``transaction`` will
-        use if executed on top of the block specified by ``at_header``.
-        """
-        ...
-
-    @abstractmethod
-    def import_block(self,
-                     block: BlockAPI,
-                     perform_validation: bool=True,
-                     ) -> BlockImportResult:
-        """
-        Import the given ``block`` and return a 3-tuple
-
-        - the imported block
-        - a tuple of blocks which are now part of the canonical chain.
-        - a tuple of blocks which were canonical and now are no longer canonical.
-        """
-        ...
-
-    #
-    # Validation API
-    #
-    @abstractmethod
-    def validate_receipt(self, receipt: ReceiptAPI, at_header: BlockHeaderAPI) -> None:
-        """
-        Validate the given ``receipt`` at the given header.
-        """
-        ...
-
-    @abstractmethod
-    def validate_block(self, block: BlockAPI) -> None:
-        """
-        Validate a block that is either being mined or imported.
-
-        Since block validation (specifically the uncle validation) must have
-        access to the ancestor blocks, this validation must occur at the Chain
-        level.
-
-        Cannot be used to validate genesis block.
-        """
-        ...
-
-    @abstractmethod
-    def validate_seal(self, header: BlockHeaderAPI) -> None:
-        """
-        Validate the seal on the given ``header``.
-        """
-        ...
-
-    @abstractmethod
-    def validate_gaslimit(self, header: BlockHeaderAPI) -> None:
-        """
-        Validate the gas limit on the given ``header``.
-        """
-        ...
-
-    @abstractmethod
-    def validate_uncles(self, block: BlockAPI) -> None:
-        """
-        Validate the uncles for the given ``block``.
-        """
-        ...
-
-    @abstractmethod
-    def validate_chain(
-            self,
-            root: BlockHeaderAPI,
-            descendants: Tuple[BlockHeaderAPI, ...],
-            seal_check_random_sample_rate: int = 1) -> None:
-        """
-        Validate that all of the descendents are valid, given that the root header is valid.
-
-        By default, check the seal validity (Proof-of-Work on Ethereum 1.x mainnet) of all headers.
-        This can be expensive. Instead, check a random sample of seals using
-        seal_check_random_sample_rate.
-        """
-        ...
-
-    @abstractmethod
-    def validate_chain_extension(self, headers: Tuple[BlockHeaderAPI, ...]) -> None:
-        """
-        Validate a chain of headers under the assumption that the entire chain of headers is
-        present. Headers that are not already in the database must exist in ``headers``. Calling
-        this API is not a replacement for calling :meth:`~eth.abc.ChainAPI.validate_chain`, it is
-        an additional API to call at a different stage of header processing to enable consensus
-        schemes where the consensus can not be verified out of order.
-        """
-        ...
-
-
-class MiningChainAPI(ChainAPI):
-    """
-    Like :class:`~eth.abc.ChainAPI` but with APIs to create blocks incrementially.
-    """
-    header: BlockHeaderAPI
-
-    @abstractmethod
-    def __init__(self, base_db: AtomicDatabaseAPI, header: BlockHeaderAPI = None) -> None:
-        """
-        Initialize the chain.
-        """
-        ...
-
-    @abstractmethod
-    def apply_transaction(self,
-                          transaction: SignedTransactionAPI
-                          ) -> Tuple[BlockAPI, ReceiptAPI, ComputationAPI]:
-        """
-        Apply the transaction to the current tip block.
-
-        WARNING: ReceiptAPI and Transaction trie generation is computationally
-        heavy and incurs significant performance overhead.
-        """
-        ...
-
-    @abstractmethod
-    def mine_block(self, *args: Any, **kwargs: Any) -> BlockAPI:
-        """
-        Mines the current block. Proxies to the current Virtual Machine.
-        See VM. :meth:`~eth.vm.base.VM.mine_block`
         """
         ...

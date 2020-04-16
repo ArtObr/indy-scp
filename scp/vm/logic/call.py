@@ -2,17 +2,18 @@ from abc import (
     ABC,
     abstractmethod
 )
-
 from typing import (
     Tuple,
 )
-
-from scp import constants
 
 from eth_typing import (
     Address,
 )
 
+from scp import constants
+from scp._utils.address import (
+    force_bytes_to_address,
+)
 from scp.abc import (
     ComputationAPI,
 )
@@ -23,11 +24,6 @@ from scp.exceptions import (
 from scp.vm.opcode import (
     Opcode,
 )
-
-from scp._utils.address import (
-    force_bytes_to_address,
-)
-
 
 CallParams = Tuple[int, int, Address, Address, Address, int, int, int, int, bool, bool]
 
@@ -365,8 +361,8 @@ class CallEIP161(CallEIP150):
                               to: Address,
                               value: int) -> int:
         account_is_dead = (
-            not computation.state.account_exists(to) or
-            computation.state.account_is_empty(to)
+                not computation.state.account_exists(to) or
+                computation.state.account_is_empty(to)
         )
 
         transfer_gas_fee = constants.GAS_CALLVALUE if value else 0

@@ -13,48 +13,143 @@ from eth_typing import (
 )
 from eth_utils import (
     ExtendedDebugLogger,
-    get_extended_debug_logger,
+    get_extended_debug_logger, encode_hex,
 )
 from eth_utils.toolz import nth
 
-from scp.abc import (
-    AccountDatabaseAPI,
-    AtomicDatabaseAPI,
-    ComputationAPI,
-    ExecutionContextAPI,
-    MessageAPI,
-    SignedTransactionAPI,
-    StateAPI,
-    TransactionContextAPI,
-    TransactionExecutorAPI,
-)
-from scp.constants import (
-    MAX_PREV_HEADER_DEPTH,
-)
+from scp._utils.address import generate_contract_address
 from scp._utils.datatypes import (
     Configurable,
 )
+from scp.abc import (
+    AtomicDatabaseAPI,
+    ComputationAPI,
+    MessageAPI,
+    SignedTransactionAPI,
+    StateAPI,
+    TransactionExecutorAPI,
+)
+from scp.constants import (
+    MAX_PREV_HEADER_DEPTH, CREATE_CONTRACT_ADDRESS,
+)
+from scp.exceptions import ContractCreationCollision
+from scp.vm.computation import BaseComputation
+from scp.vm.message import Message
 
 
-class BaseState(Configurable, StateAPI):
+class VMTransactionExecutor(TransactionExecutorAPI):
+    def __init__(self, vm_state: StateAPI) -> None:
+        self.vm_state = vm_state
+
+    def __call__(self, transaction: SignedTransactionAPI) -> ComputationAPI:
+        self.validate_transaction(transaction)
+        message = self.build_evm_message(transaction)
+        computation = self.build_computation(message, transaction)
+        finalized_computation = self.finalize_computation(transaction, computation)
+        return finalized_computation
+
+    def validate_transaction(self, transaction: SignedTransactionAPI) -> None:
+
+        # Validate the transaction
+        transaction.validate()
+        self.vm_state.validate_transaction(transaction)
+
+    def build_evm_message(self, transaction: SignedTransactionAPI) -> MessageAPI:
+
+        gas_fee = transaction.gas * transaction.gas_price
+
+        # Buy Gas
+        # self.vm_state.delta_balance(transaction.sender, -1 * gas_fee)
+
+        # Increment Nonce
+        # self.vm_state.increment_nonce(transaction.sender)
+
+        # Setup VM Message
+        message_gas = transaction.gas - transaction.intrinsic_gas
+
+        if transaction.to == CREATE_CONTRACT_ADDRESS:
+            contract_address = generate_contract_address(
+                transaction.sender,
+                # self.vm_state.get_nonce(transaction.sender) - 1,
+                1
+            )
+            data = b''
+            code = transaction.data
+            self.vm_state.set_code(contract_address, transaction.data)
+        else:
+            contract_address = None
+            data = transaction.data
+            code = self.vm_state.get_code(transaction.to)
+
+        message = Message(
+            gas=message_gas,
+            to=transaction.to,
+            sender=transaction.sender,
+            value=transaction.value,
+            data=data,
+            code=code,
+            create_address=contract_address,
+        )
+        return message
+
+    def build_computation(self,
+                          message: MessageAPI,
+                          transaction: SignedTransactionAPI) -> ComputationAPI:
+        if message.is_create:
+            is_collision = self.vm_state.has_code_or_nonce(
+                message.storage_address
+            )
+
+            if is_collision:
+                # The address of the newly created contract has *somehow* collided
+                # with an existing contract address.
+                computation = self.vm_state.get_computation(message)
+                computation.error = ContractCreationCollision(
+                    f"Address collision while creating contract: "
+                    f"{encode_hex(message.storage_address)}"
+                )
+                self.vm_state.logger.debug2(
+                    "Address collision while creating contract: %s",
+                    encode_hex(message.storage_address),
+                )
+            else:
+                computation = self.vm_state.get_computation(
+                    message
+                ).apply_create_message()
+        else:
+            computation = self.vm_state.get_computation(
+                message).apply_message()
+
+        return computation
+
+    def finalize_computation(self,
+                             transaction: SignedTransactionAPI,
+                             computation: ComputationAPI) -> ComputationAPI:
+
+        return computation
+
+
+class VMState(Configurable, StateAPI):
     #
     # Set from __init__
     #
     __slots__ = ['_db', 'execution_context', '_account_db']
 
-    computation_class: Type[ComputationAPI] = None
-    transaction_context_class: Type[TransactionContextAPI] = None
-    account_db_class: Type[AccountDatabaseAPI] = None
-    transaction_executor_class: Type[TransactionExecutorAPI] = None
+    computation_class: Type[ComputationAPI] = BaseComputation
+    transaction_executor_class: Type[TransactionExecutorAPI] = VMTransactionExecutor
 
     def __init__(
             self,
-            db: AtomicDatabaseAPI,
-            execution_context: ExecutionContextAPI,
-            state_root: bytes) -> None:
+            db: AtomicDatabaseAPI) -> None:
         self._db = db
-        self.execution_context = execution_context
         self._account_db = self.get_account_db_class()(db, b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:')
+
+    def apply_transaction(self, transaction: SignedTransactionAPI) -> ComputationAPI:
+        executor = self.get_transaction_executor()
+        return executor(transaction)
+
+    def validate_transaction(self, transaction: SignedTransactionAPI) -> None:
+        pass
 
     #
     # Logging
@@ -91,7 +186,7 @@ class BaseState(Configurable, StateAPI):
     # Access to account db
     #
     @classmethod
-    def get_account_db_class(cls) -> Type[AccountDatabaseAPI]:
+    def get_account_db_class(cls):
         if cls.account_db_class is None:
             raise AttributeError(f"No account_db_class set for {cls.__name__}")
         return cls.account_db_class
@@ -103,7 +198,7 @@ class BaseState(Configurable, StateAPI):
     def make_state_root(self) -> Hash32:
         return self._account_db.make_state_root()
 
-    def get_storage(self, address: Address, slot: int, from_journal: bool=True) -> int:
+    def get_storage(self, address: Address, slot: int, from_journal: bool = True) -> int:
         return self._account_db.get_storage(address, slot, from_journal)
 
     def set_storage(self, address: Address, slot: int, value: int) -> None:
@@ -188,9 +283,9 @@ class BaseState(Configurable, StateAPI):
     def get_ancestor_hash(self, block_number: int) -> Hash32:
         ancestor_depth = self.block_number - block_number - 1
         is_ancestor_depth_out_of_range = (
-            ancestor_depth >= MAX_PREV_HEADER_DEPTH or
-            ancestor_depth < 0 or
-            block_number < 0
+                ancestor_depth >= MAX_PREV_HEADER_DEPTH or
+                ancestor_depth < 0 or
+                block_number < 0
         )
         if is_ancestor_depth_out_of_range:
             return Hash32(b'')
@@ -205,66 +300,15 @@ class BaseState(Configurable, StateAPI):
     # Computation
     #
     def get_computation(self,
-                        message: MessageAPI,
-                        transaction_context: TransactionContextAPI) -> ComputationAPI:
+                        message: MessageAPI) -> ComputationAPI:
         if self.computation_class is None:
             raise AttributeError("No `computation_class` has been set for this State")
         else:
-            computation = self.computation_class(self, message, transaction_context)
+            computation = self.computation_class(self, message)
         return computation
-
-    #
-    # Transaction context
-    #
-    @classmethod
-    def get_transaction_context_class(cls) -> Type[TransactionContextAPI]:
-        if cls.transaction_context_class is None:
-            raise AttributeError("No `transaction_context_class` has been set for this State")
-        return cls.transaction_context_class
 
     #
     # Execution
     #
     def get_transaction_executor(self) -> TransactionExecutorAPI:
         return self.transaction_executor_class(self)
-
-    def costless_execute_transaction(self,
-                                     transaction: SignedTransactionAPI) -> ComputationAPI:
-        with self.override_transaction_context(gas_price=transaction.gas_price):
-            free_transaction = transaction.copy(gas_price=0)
-            return self.apply_transaction(free_transaction)
-
-    @contextlib.contextmanager
-    def override_transaction_context(self, gas_price: int) -> Iterator[None]:
-        original_context = self.get_transaction_context
-
-        def get_custom_transaction_context(transaction: SignedTransactionAPI) -> TransactionContextAPI:   # noqa: E501
-            custom_transaction = transaction.copy(gas_price=gas_price)
-            return original_context(custom_transaction)
-
-        # mypy doesn't like assigning to an existing method
-        self.get_transaction_context = get_custom_transaction_context  # type: ignore
-        try:
-            yield
-        finally:
-            self.get_transaction_context = original_context     # type: ignore # Remove ignore if https://github.com/python/mypy/issues/708 is fixed. # noqa: E501
-
-    @classmethod
-    def get_transaction_context(cls,
-                                transaction: SignedTransactionAPI) -> TransactionContextAPI:
-        return cls.get_transaction_context_class()(
-            gas_price=transaction.gas_price,
-            origin=transaction.sender,
-        )
-
-
-class BaseTransactionExecutor(TransactionExecutorAPI):
-    def __init__(self, vm_state: StateAPI) -> None:
-        self.vm_state = vm_state
-
-    def __call__(self, transaction: SignedTransactionAPI) -> ComputationAPI:
-        self.validate_transaction(transaction)
-        message = self.build_evm_message(transaction)
-        computation = self.build_computation(message, transaction)
-        finalized_computation = self.finalize_computation(transaction, computation)
-        return finalized_computation

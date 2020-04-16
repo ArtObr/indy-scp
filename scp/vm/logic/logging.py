@@ -1,7 +1,7 @@
 import functools
 from typing import Tuple
-from scp import constants
 
+from scp import constants
 from scp.vm.computation import BaseComputation
 
 
@@ -16,7 +16,7 @@ def log_XX(computation: BaseComputation, topic_count: int) -> None:
     elif topic_count > 1:
         topics = computation.stack_pop_ints(topic_count)
     else:
-        topics = (computation.stack_pop1_int(), )
+        topics = (computation.stack_pop1_int(),)
 
     data_gas_cost = constants.GAS_LOGDATA * size
     topic_gas_cost = constants.GAS_LOGTOPIC * topic_count

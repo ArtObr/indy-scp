@@ -1,5 +1,4 @@
 import functools
-
 from typing import (
     Any,
     Callable,
@@ -17,7 +16,6 @@ from scp.abc import (
     ComputationAPI,
     OpcodeAPI,
 )
-
 
 T = TypeVar('T')
 

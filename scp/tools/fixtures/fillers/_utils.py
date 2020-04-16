@@ -29,7 +29,7 @@ from scp.typing import (
     TransactionDict,
 )
 from scp.vm.state import (
-    BaseState,
+    VMState,
 )
 
 
@@ -62,7 +62,7 @@ def add_transaction_to_group(group: Dict[str, Any],
     return new_group, indexes
 
 
-def calc_state_root(state_dict: AccountState, state_class: Type[BaseState]) -> bytes:
+def calc_state_root(state_dict: AccountState, state_class: Type[VMState]) -> bytes:
     state = state_class(AtomicDB(), None, BLANK_ROOT_HASH)
     apply_state_dict(state, state_dict)
     return state.state_root

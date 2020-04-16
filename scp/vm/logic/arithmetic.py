@@ -3,13 +3,11 @@ from eth_utils.toolz import (
 )
 
 from scp import constants
-
 from scp._utils.numeric import (
     unsigned_to_signed,
     signed_to_unsigned,
     ceil8,
 )
-
 from scp.vm.computation import BaseComputation
 
 

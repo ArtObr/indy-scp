@@ -1,10 +1,17 @@
 import logging
+from typing import (
+    List,
+    Tuple,
+    Union
+)
 
 from eth_utils import (
     big_endian_to_int,
     int_to_big_endian,
     ValidationError,
 )
+
+from scp.abc import StackAPI
 from scp.exceptions import (
     InsufficientStack,
     FullStack,
@@ -13,14 +20,6 @@ from scp.validation import (
     validate_stack_bytes,
     validate_stack_int,
 )
-
-from typing import (
-    List,
-    Tuple,
-    Union
-)
-
-from scp.abc import StackAPI
 
 
 def _busted_type(item_type: type, value: Union[int, bytes]) -> ValidationError:
