@@ -1704,7 +1704,6 @@ class VirtualMachineAPI(ConfigurableAPI):
     #
     @abstractmethod
     def apply_transaction(self,
-                          header: BlockHeaderAPI,
                           transaction: SignedTransactionAPI
                           ) -> ComputationAPI:
         """

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import NamedTuple
 
 from eth_utils import (
     decode_hex,
@@ -13,6 +14,7 @@ from scp.db.chain import ChainDB
 from scp.tools.factories.transaction import (
     new_transaction
 )
+from scp.vm.base import VM
 from scp.vm.opcode_values import CALLDATALOADFUNCTION, EQ, PUSH1, JUMPI, JUMPDEST, RETURN, SSTORE, PUSH32, PUSH4, SLOAD, \
     MSTORE
 from scp.vm.state import VMState
@@ -73,23 +75,29 @@ contract_code = bytes([
     0x20,
     PUSH1,
     0x0,
-
     RETURN
 ])
 
 call_get_value_code = bytes([*'2096'.encode()])
 
 
+def create_test_txn(data, sender, to):
+    Txn = NamedTuple('txn',
+                     (('data', bytes),
+                      ('sender', bytes),
+                      ('to', bytes)))
+    return Txn(data, sender, to)
+
+
 def test_apply_transaction():
-    db = AtomicDB()
-    vm = VMState(ChainDB(db))
+    vm = VM()
     recipient = b''
     amount = 0
     from_ = b''
-    tx = new_transaction(vm, from_, recipient, amount, b'', data=contract_code)
+    tx = create_test_txn(contract_code, from_, recipient)
     computation = vm.apply_transaction(tx)
 
     recipient = b'+\xea/ _\n\x1b6t\xc8\xd1\xd7\xae\xe6\xb1q"\xa2\xf7:'
-    tx = new_transaction(vm, from_, recipient, amount, b'', data=call_get_value_code)
+    tx = create_test_txn(call_get_value_code, from_, recipient)
     computation = vm.apply_transaction(tx)
     assert computation.output.decode('utf-8').lstrip('\0') == 'Hello World'

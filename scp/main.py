@@ -1,5 +1,7 @@
 from scp.indy_constants import CONTRACT_LEDGER_ID
-from scp.vm.forks import HomesteadVM
+from scp.request_handlers.contract_batch_hanlder import ContractBatchHandler
+from scp.request_handlers.contract_request_handler import ContractRequestHandler
+from scp.vm.base import VM
 from state.pruning_state import PruningState
 
 from storage.helper import initKeyValueStorage
@@ -39,22 +41,22 @@ def init_storages(node):
 
 
 def init_virtual_machine(node):
-    node.virtual_machine = HomesteadVM()
+    node.virtual_machine = VM()
 
 
 def init_contract_ledger(node):
-    return Ledger(CompactMerkleTree(hashStore=node.getHashStore('sovtoken')),
+    return Ledger(CompactMerkleTree(hashStore=node.getHashStore('contract')),
                   dataDir=node.dataLocation,
-                  fileName=node.config.tokenTransactionsFile,
+                  fileName=node.config.contractTransactionsFile,
                   ensureDurability=node.config.EnsureLedgerDurability)
 
 
 def init_contract_state(node):
     return PruningState(
         initKeyValueStorage(
-            node.config.tokenStateStorage,
+            node.config.contractStateStorage,
             node.dataLocation,
-            node.config.tokenStateDbName,
+            node.config.contractStateDbName,
             db_config=node.config.db_state_config)
     )
 
@@ -67,22 +69,16 @@ def init_token_database(node):
 
 
 def register_req_handlers(node):
-    node.write_manager.register_req_handler(XferHandler(node.db_manager,
-                                                        node.write_req_validator))
-    node.write_manager.register_req_handler_with_version(XferHandler100(node.db_manager,
-                                                                        node.write_req_validator),
-                                                         "1.0.0")
-    node.write_manager.register_req_handler(MintHandler(node.db_manager,
-                                                        node.write_req_validator))
-    node.read_manager.register_req_handler(GetUtxoHandler(node.db_manager, node.config.MSG_LEN_LIMIT))
+    node.write_manager.register_req_handler(ContractRequestHandler(node.db_manager,
+                                                                   node.write_req_validator,
+                                                                   node.virtual_machine))
 
 
 def register_batch_handlers(node):
-    node.write_manager.register_batch_handler(UTXOBatchHandler(node.db_manager), add_to_begin=True)
-    node.write_manager.register_batch_handler(TokenBatchHandler(node.db_manager), add_to_begin=True)
+    node.write_manager.register_batch_handler(ContractBatchHandler(node.db_manager), add_to_begin=True)
     node.write_manager.register_batch_handler(node.write_manager.node_reg_handler,
-                                              ledger_id=TOKEN_LEDGER_ID)
+                                              ledger_id=CONTRACT_LEDGER_ID)
     node.write_manager.register_batch_handler(node.write_manager.primary_reg_handler,
-                                              ledger_id=TOKEN_LEDGER_ID)
+                                              ledger_id=CONTRACT_LEDGER_ID)
     node.write_manager.register_batch_handler(node.write_manager.audit_b_handler,
-                                              ledger_id=TOKEN_LEDGER_ID)
+                                              ledger_id=CONTRACT_LEDGER_ID)

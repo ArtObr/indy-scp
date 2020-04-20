@@ -55,28 +55,17 @@ class VM(Configurable, VirtualMachineAPI):
     @property
     def state(self) -> StateAPI:
         if self._state is None:
-            self._state = self.build_state(self.chaindb.db,
-                                           self.get_header(),
-                                           self.chain_context,
-                                           [])
+            self._state = self.build_state()
         return self._state
 
     @classmethod
-    def build_state(self,
-                    db: AtomicDatabaseAPI,
-                    header: BlockHeaderAPI,
-                    chain_context: ChainContextAPI,
-                    previous_hashes: Iterable[Hash32] = (),
-                    ) -> StateAPI:
-        return self._state_class(db)
+    def build_state(self) -> StateAPI:
+        return self._state_class()
 
     #
     # Execution
     #
-    def apply_transaction(self,
-                          header: BlockHeaderAPI,
-                          transaction: SignedTransactionAPI
-                          ) -> ComputationAPI:
+    def apply_transaction(self, transaction) -> ComputationAPI:
 
         computation = self.state.apply_transaction(transaction)
 

@@ -52,7 +52,7 @@ class VMTransactionExecutor(TransactionExecutorAPI):
     def validate_transaction(self, transaction: SignedTransactionAPI) -> None:
 
         # Validate the transaction
-        transaction.validate()
+        # transaction.validate()
         self.vm_state.validate_transaction(transaction)
 
     def build_evm_message(self, transaction: SignedTransactionAPI) -> MessageAPI:
@@ -78,7 +78,7 @@ class VMTransactionExecutor(TransactionExecutorAPI):
             gas=1,
             to=transaction.to,
             sender=transaction.sender,
-            value=transaction.value,
+            value=0,
             data=data,
             code=code,
             create_address=contract_address,
@@ -131,10 +131,7 @@ class VMState(Configurable, StateAPI):
     computation_class: Type[ComputationAPI] = BaseComputation
     transaction_executor_class: Type[TransactionExecutorAPI] = VMTransactionExecutor
 
-    def __init__(
-            self,
-            db: AtomicDatabaseAPI) -> None:
-        self._db = db
+    def __init__(self) -> None:
         self._account_db = {
 
         }
